@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SP Cloud — Decentralized. Lightning‑Fast. Beautiful.</title>
+  <meta name="description" content="SP Cloud: decentralized cloud with proprietary bandwidth optimization, 95% lossless compression, realtime collaboration, high‑res calls & streaming. Pre‑order now." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root{
+      --bg:#0e0b16;
+      --ink:#f7f7fb;
+      --muted:#c3bce6;
+      --accent1:#a86bff; /* purple */
+      --accent2:#ff5fb7; /* pink */
+      --accent3:#ffd166; /* soft yellow */
+      --accent4:#66e0ff; /* soft blue */
+      --glass: rgba(255,255,255,0.08);
+      --glass-strong: rgba(255,255,255,0.14);
+      --radius: 20px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --maxw: 1180px;
+    }
+    *{box-sizing:border-box}
+    a{
+      text-decoration: none;
+    }
+    html,body{margin:0;padding: 0; overflow-x: hidden;}
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1800px 900px at 90% -10%, rgba(255,170,0,.12), transparent 60%),
+        radial-gradient(1400px 800px at -10% 10%, rgba(87, 0, 255,.25), transparent 60%),
+        linear-gradient(160deg, #1a102b 0%, #0f0b21 45%, #0a0920 100%);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .gradient-txt{background:linear-gradient(90deg,var(--accent4),var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .btn{
+      display:inline-flex;align-items:center;gap:.6rem;
+      padding:.9rem 1.1rem;border-radius:999px;font-weight:700;
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:#fff;border:0;box-shadow:var(--shadow);cursor:pointer;
+      transition: transform .15s ease, filter .2s ease;
+    }
+    .btn:hover{transform: translateY(-2px); filter: brightness(1.08)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.25)}
+    .container{width:100%;max-width:var(--maxw);margin-inline:auto;padding:0 20px}
+    .hero{position:relative;padding:15px 0 50px}
+    .hero::after{content:"";position:absolute;inset:auto -240px -180px -240px;height:520px;z-index:-1;
+      background: radial-gradient(50% 60% at 50% 40%, rgba(255,95,183,.28), transparent 70%),
+                  radial-gradient(50% 60% at 70% 30%, rgba(102,224,255,.18), transparent 70%),
+                  radial-gradient(60% 70% at 40% 70%, rgba(168,107,255,.30), transparent 70%);
+      filter: blur(60px);opacity:.8}
+    .grid{display:grid;gap:26px}
+    .hero-grid{grid-template-columns: 1.2fr .8fr;align-items:center}
+    .card{background:var(--glass);backdrop-filter: blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .logo-row{display:flex;align-items:center;gap:14px}
+    .logo{width:54px;height:54px;border-radius:12px;background: linear-gradient(135deg, rgba(168,107,255,.3), rgba(255,95,183,.3)); display:grid;place-items:center;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:contain}
+    h1{font-size: clamp(2.2rem, 5vw, 4rem);line-height:1.05;margin:10px 0 14px;font-weight:900}
+    p.lead{font-size: clamp(1.05rem, 1.6vw, 1.2rem);line-height:1.6;color:var(--muted)}
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 26px}
+    .badge{padding:.45rem .75rem;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:var(--glass-strong);font-weight:600;font-size:.85rem}
+    .media{padding:10px;}
+    .media img{width:100%;height:auto;display:block;border-radius:18px}
+
+    /* Feature section */
+    section{padding:50px 0}
+    .section-title{font-size: clamp(1.6rem, 3vw, 2.2rem);margin:0 0 10px;font-weight:800}
+    .section-sub{color:var(--muted);margin:0 0 28px}
+    .features{grid-template-columns:repeat(3,1fr)}
+    .feature{padding:22px}
+    .feature h3{margin:0 0 8px;font-size:1.1rem}
+    .feature p{margin:0;color:#d9d6ef}
+
+    /* Stats strip */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}
+    .stat{padding:20px;border-radius:16px;background:linear-gradient(135deg,rgba(168,107,255,.22),rgba(255,95,183,.18));border:1px solid rgba(255,255,255,.16)}
+    .stat .num{font-size:1.9rem;font-weight:900}
+    .stat .cap{color:#e9e7ff;opacity:.85}
+
+    /* Tools gallery */
+    .tools{grid-template-columns:repeat(4,1fr)}
+    .tool{padding:18px;display:flex;flex-direction:column;gap:10px}
+    .tool strong{font-size:1rem}
+
+    /* Preorder form */
+    .form-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:stretch}
+    form{padding:24px}
+    label{display:block;font-weight:700;margin:8px 0 6px}
+    .input, select, textarea{width:100%;padding:14px 16px;border-radius:14px;color:#fff;
+      background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.25);outline:none;
+      transition:border .15s ease, box-shadow .15s ease;font-family: Inter, sans-serif;font-size:1rem}
+    .input:focus, select:focus, textarea:focus{border-color:var(--accent2);box-shadow:0 0 0 4px rgba(255,95,183,.15)}
+    select{appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;background:rgba(0,0,0,.4)}
+    select::-ms-expand{display:none}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .terms{display:flex;align-items:flex-start;gap:10px;margin:10px 0 6px;font-size:.95rem;color:#dcd7ff}
+    .terms input{margin-top:2px}
+    .note{font-size:.85rem;color:var(--muted)}
+    .success{display:none;margin-top:10px;color:#b1f5c4;font-weight:700}
+    .error{display:none;margin-top:10px;color:#ffb2c2;font-weight:700}
+
+.hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 30px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .hamburger span {
+      width: 100%;
+      height: 3px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(135deg, var(--bg) 0%, rgba(14, 11, 22, 0.9) 50%, var(--bg) 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease infinite;
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      transform: translateY(-100%);
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 2px solid rgba(168, 107, 255, 0.3);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .mobile-menu.active {
+      transform: translateY(0);
+    }
+    .mobile-menu-content {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+      padding: 20px;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    .mobile-menu a {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 20px 25px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--glass), var(--glass-strong));
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    .mobile-menu a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 95, 183, 0.4), rgba(102, 224, 255, 0.4), transparent);
+      transition: left 0.6s ease;
+    }
+    .mobile-menu a::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(168, 107, 255, 0.2), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .mobile-menu a:hover::before {
+      left: 100%;
+    }
+    .mobile-menu a:hover::after {
+      opacity: 1;
+    }
+    .mobile-menu a:hover {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff;
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(168, 107, 255, 0.4);
+      border-color: var(--accent2);
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, var(--accent1), var(--accent2));
+      border: none;
+      font-size: 2.5rem;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1001;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(168, 107, 255, 0.3);
+      animation: pulse 2s infinite;
+    }
+    .close-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(255, 95, 183, 0.5);
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Animations for new section */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(102, 224, 255, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(102, 224, 255, 0.6); }
+    }
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .animate-on-scroll.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width:768px) {
+      .hamburger {
+        display: flex;
+      }
+      nav .btn {
+        display: none;
+      }
+      .logo-row strong {
+        font-size: 1.2rem;
+      }
+    }
+    @media (max-width:960px){
+      .hero-grid{grid-template-columns:1fr}
+      .features{grid-template-columns:1fr 1fr}
+      .tools{grid-template-columns:1fr 1fr}
+      .form-wrap{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:560px){
+      .features,.tools{grid-template-columns:1fr}
+      .row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <header class="container" style="padding:20px 20px 0">
+    <nav class="card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:999px">
+      <div class="logo-row">
+        <div class="logo">
+          <!-- Replace src with your path. Example local path: ./assets/sp_logo.png -->
+          <img src="logo.png" alt="SP Cloud logo" />
+        </div>
+        <strong style="letter-spacing:.5px">SP <span class="gradient-txt">Cloud</span></strong>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <a class="btn ghost" href="#features">Features</a>
+        <a class="btn ghost" href="#tools">Tools</a>
+        <a class="btn" href="#preorder">Pre‑order</a>
+      </div>
+      <!-- Hamburger Menu for Mobile -->
+      <button class="hamburger" aria-label="Toggle mobile menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="close-btn" onclick="closeMobileMenu()" aria-label="Close mobile menu">&times;</button>
+      <div class="mobile-menu-content">
+        <a href="#features" onclick="closeMobileMenu()">Features</a>
+        <a href="#tools" onclick="closeMobileMenu()">Tools</a>
+        <a href="#preorder" onclick="closeMobileMenu()">Pre‑order</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container grid hero-grid">
+      <div>
+        <div class="badges">
+          <span class="badge">Decentralized network</span>
+          <span class="badge">Proprietary algorithms</span>
+          <span class="badge">95% lossless compression</span>
+        </div>
+        <h1>
+          The first <span class="gradient-txt">decentralized cloud</span>
+          that feels instant.
+        </h1>
+        <p class="lead">
+        Store more with <strong>95% lossless compression</strong>. Collaborate with near‑zero latency. All powered by SP Cloud’s unique bandwidth optimization so bad internet connection is not a problem anymore. 
+        </p>
+        <div style="margin-top:20px;">
+          <p style="font-size:1.5rem; font-weight:600; text-align:left;">
+            <span class="gradient-txt">Preregister now for free and get 3 free months</span>
+          </p>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:18px">
+          <a class="btn" href="#preorder">Pre‑order access</a>
+          <a class="btn ghost" href="promo_fixed.html">Watch promo</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="num">95%</div><div class="cap">Lossless compression</div></div>
+          <div class="stat"><div class="num">5ms</div><div class="cap">Audio/video calls and texing latency</div></div>
+          <div class="stat"><div class="num">99%</div><div class="cap">Uptime(instant search/uploads)</div></div>
+          <div class="stat"><div class="num">10+</div><div class="cap">Everyday tools</div></div>
+        </div>
+      </div>
+      <div class="media card">
+        <!-- Hero graphic -->
+        <img src="design_graphics_1.png" alt="SP Cloud network graphic" />
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">Built for speed, privacy & scale</h2>
+      <p class="section-sub">Our stack merges decentralized topology with algorithmic bandwidth magic for a cloud that it's just <em>like in real-life</em>.</p>
+      <div class="grid features">
+        <div class="card feature">
+          <h3>Lossless storage efficiency</h3>
+          <p>Store more with proprietary <strong>95% lossless</strong> compression while preserving every bit that matters.</p>
+        </div>
+        <div class="card feature">
+          <h3>Instant bandwidth optimization</h3>
+          <p>Smart routing and compression keep quality high of anything while usage stays low.</p>
+        </div>
+        <div class="card feature">
+          <h3>Realtime collaboration</h3>
+          <p>Docs, code, and whiteboards update with near‑zero delay — it’s like you’re sharing the same screen.</p>
+        </div>
+        <div class="card feature">
+          <h3>High‑res calls & streaming</h3>
+          <p>Crystal‑clear audio and video with automatic adaptation — no perfect network required.</p>
+        </div>
+        <div class="card feature">
+          <h3>Decentralized by design</h3>
+          <p>All devices work together as one powerful network — the more that join, the faster, stronger, and more private it becomes.</p>
+        </div>
+        <div class="card feature">
+          <h3>Developer‑friendly Collab</h3>
+          <p>Edit, build, and innovate together with unlimited teammates. Seamlessly, securely, and without delay.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTANT SEARCH & ORGANIZATION -->
+  <section id="search" style="padding:80px 0; background: linear-gradient(135deg, rgba(14,11,22,0.8), rgba(26,16,43,0.9));">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:60px;" class="animate-on-scroll">
+        <h2 class="section-title" style="animation: slideInLeft 0.8s ease-out;">Instant Search & Organization</h2>
+        <p class="section-sub" style="animation: slideInLeft 0.8s ease-out 0.2s both;">With our advanced search algorithms, find and search millions of compressed files instantly — without the need to decompress. Edit, organize, and access everything in seconds, saving time and storage.</p>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:30px;">
+        <div class="card feature animate-on-scroll" style="animation: fadeInUp 0.8s ease-out 0.4s both; animation-play-state: running;">
+          <div style="width:60px; height:60px; background:linear-gradient(135deg,var(--accent4),var(--accent1)); border-radius:12px; margin-bottom:20px; display:flex; align-items:center; justify-content:center; font-size:24px; animation: pulseGlow 2s infinite;">
+            <i class="fas fa-search" style="color:#fff; font-size:28px;"></i>
+          </div>
+          <h3 style="animation: fadeInUp 0.8s ease-out 0.6s both;">Lightning-Fast Search</h3>
+          <p style="animation: fadeInUp 0.8s ease-out 0.8s both;">With our search algorithms, dive into compressed files instantly — no decompression needed. Find anything in seconds across your entire library.</p>
+        </div>
+        <div class="card feature animate-on-scroll" style="animation: fadeInUp 0.8s ease-out 0.5s both;">
+          <div style="width:60px; height:60px; background:linear-gradient(135deg,var(--accent2),var(--accent3)); border-radius:12px; margin-bottom:20px; display:flex; align-items:center; justify-content:center; font-size:24px; animation: pulseGlow 2s infinite 0.5s;">
+            <i class="fas fa-folder" style="color:#fff; font-size:28px;"></i>
+          </div>
+          <h3 style="animation: fadeInUp 0.8s ease-out 0.7s both;">Smart Organization</h3>
+          <p style="animation: fadeInUp 0.8s ease-out 0.9s both;">AI-driven categorization keeps your files organized automatically. Tags, folders, and previews update in real-time, even for compressed content.</p>
+        </div>
+        <div class="card feature animate-on-scroll" style="animation: fadeInUp 0.8s ease-out 0.6s both;">
+          <div style="width:60px; height:60px; background:linear-gradient(135deg,var(--accent1),var(--accent4)); border-radius:12px; margin-bottom:20px; display:flex; align-items:center; justify-content:center; font-size:24px; animation: pulseGlow 2s infinite 1s;">
+            <i class="fas fa-edit" style="color:#fff; font-size:28px;"></i>
+          </div>
+          <h3 style="animation: fadeInUp 0.8s ease-out 0.8s both;">Edit Without Decompression</h3>
+          <p style="animation: fadeInUp 0.8s ease-out 1s both;">Modify and search compressed files directly. Our tech lets you edit, annotate, and query without losing quality or time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools">
+    <div class="container">
+      <h2 class="section-title">Tools that feel magical</h2>
+      <p class="section-sub">Everything you need — chat, calls, streaming, docs, code, and whiteboard — all where your files live. Instantly search, edit, and even work with your compressed files, all with sub-second response.</p>
+      <div class="grid tools">
+        <div class="card tool"><strong>Lightning chat/calls</strong><span>~5ms latency, like real life</span></div>
+        <div class="card tool"><strong>Video calls</strong><span>High resolution on low bandwidth</span></div>
+        <div class="card tool"><strong>Streaming</strong><span>High qualily playback that adapts to you</span></div>
+        <div class="card tool"><strong>PDF tools</strong><span>Merge, split, annotate in the cloud</span></div>
+        <div class="card tool"><strong>Docs & code</strong><span>Realtime editing with no friction</span></div>
+        <div class="card tool"><strong>Whiteboard</strong><span>Draw, plan, design</span></div>
+        <div class="card tool"><strong>Game launcher</strong><span>Ultra‑high FPS on any device <em>(coming soon)</em></span></div>
+        <div class="card tool"><strong>Optimizers & simulators</strong><span>Hard problems, fast answers <em>(coming soon)</em></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREORDER -->
+  <section id="preorder">
+    <div class="container">
+      <div class="form-wrap">
+        <div class="card" style="padding:26px 24px">
+          <h2 class="section-title">Get early access</h2>
+          <p class="section-sub">Join the waitlist to be among the first to try SP Cloud. We’ll notify you as soon as your region is live.</p>
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;color:#e9e7ff">
+            <li>• Priority invites and updates</li>
+            <li>• Early adopter perks</li>
+            <li>• Optional pilot programs for teams</li>
+          </ul>
+        </div>
+        <form id="preorderForm" class="card" novalidate>
+          <input type="text" name="company" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true"> <!-- honeypot -->
+          <div class="row">
+            <div>
+              <label for="name">Name</label>
+              <input class="input" type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input class="input" type="email" id="email" name="email" placeholder="you@company.com" required>
+            </div>
+          </div>
+          <label for="ref">How did you hear about SP Cloud?</label>
+          <select id="ref" name="source" required>
+            <option value="" disabled selected>Select one…</option>
+            <option>LinkedIn</option>
+            <option>Friend/colleague</option>
+            <option>News/Blog</option>
+            <option>Event/Conference</option>
+            <option>Other</option>
+          </select>
+          <label for="msg">Anything we should know? <span class="note">(optional)</span></label>
+          <textarea id="msg" name="message" rows="4" placeholder="Team size, use‑case, region…"></textarea>
+          <label class="terms">
+            <input type="checkbox" id="terms" required>
+            <span>I consent to <a href="#" class="gradient-txt">Receive Emails</a>.</span>
+          </label>
+          <button class="btn" type="submit">Join the waitlist</button>
+          <div class="success" id="okMsg">Thanks! You’re on the list — check your inbox.</div>
+          <div class="error" id="errMsg">Please fill all required fields correctly.</div>
+          <p class="note">We’ll only use your email for SP Cloud updates. No spam.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEARN / IMAGE STRIP -->
+  <!-- <section id="learn">
+    <div class="container card" style="padding:18px">
+      <img src="logo.png" alt="SP Cloud brand" style="width:100%;height:auto;border-radius:16px;opacity:.95"/>
+    </div>
+  </section> -->
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container foot">
+      <div class="logo-row">
+        <div class="logo"><img src="logo.png" alt="SP logo"/></div>
+        <div>© <span id="year"></span> SP Cloud. All rights reserved.</div>
+      </div>
+      <div style="display:flex;gap:16px">
+        <a class="gradient-txt" href="#">Privacy</a>
+        <a class="gradient-txt" href="#">Terms</a>
+        <a class="gradient-txt" href="#preorder">Pre‑register</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+  emailjs.init('6QCmp2AnjIvZX_kx2')
+</script>
+
+  <script>
+    // Smooth anchor scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href');
+        if(id.length>1){ e.preventDefault(); document.querySelector(id).scrollIntoView({behavior:'smooth'}); }
+      })
+    });
+
+    // Add scroll animations
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, observerOptions);
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    // Simple form validation + EmailJS submit
+    const form = document.getElementById('preorderForm');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const ok = document.getElementById('okMsg');
+      const err = document.getElementById('errMsg');
+      ok.style.display = 'none'; err.style.display = 'none';
+
+      // Basic validation
+      if(form.company.value){ err.style.display='block'; return } // honeypot triggered
+      if(!form.name.value.trim()) { err.style.display='block'; return }
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value)) { err.style.display='block'; return }
+      if(!form.ref.value) { err.style.display='block'; return }
+      if(!document.getElementById('terms').checked) { err.style.display='block'; return }
+
+      try {
+        // Send email using EmailJS sendForm (simpler, uses form data directly)
+        await emailjs.sendForm('service_77zcepd', 'template_iq1b5eh', form);
+        form.reset();
+        ok.style.display='block';
+      } catch(ex){
+        console.log('EmailJS error:', ex);
+        err.style.display='block';
+      }
+    });
+    // Mobile menu toggle functions
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const hamburger = document.querySelector('.hamburger');
+      console.log('Toggle menu called'); // Debug log
+      mobileMenu.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    }
+    function closeMobileMenu() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const hamburger = document.querySelector('.hamburger');
+      mobileMenu.classList.remove('active');
+      hamburger.classList.remove('active');
+    }
+    // Add event listeners after DOM is loaded
+    window.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.hamburger').addEventListener('click', toggleMobileMenu);
+      // Add event listeners for mobile menu links to close menu on click
+      document.querySelectorAll('.mobile-menu a').forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const hamburger = document.querySelector('.hamburger');
+        const isClickInsideMenu = mobileMenu.contains(event.target);
+        const isClickOnHamburger = hamburger.contains(event.target);
+        if (!isClickInsideMenu && !isClickOnHamburger && mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        }
+      });
+    });
+  </script>
