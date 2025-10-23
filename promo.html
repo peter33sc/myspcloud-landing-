@@ -1317,8 +1317,8 @@
         
         if (element.textContent.includes('%')) {
           element.textContent = Math.floor(progress * (end - start) + start) + '%';
-        } else if (element.textContent.includes('x')) {
-          element.textContent = Math.floor(progress * (end - start) + start) + 'x';
+        } else if (element.textContent.includes('ms')) {
+          element.textContent = Math.floor(progress * (end - start) + start) + 'ms';
         } else if (element.textContent.includes('10+')) {
           element.textContent = '10+';
         } else {
@@ -1355,6 +1355,7 @@
   </script>
 </body>
 </html>
+
 
 
 
