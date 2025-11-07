@@ -10,6 +10,61 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" href="logo.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+    :root {
+      --bg:#0e0b16;
+      --ink:#f7f7fb;
+      --muted:#c3bce6;
+      --accent1:#a86bff;
+      --accent2:#ff5fb7;
+      --accent3:#ffd166;
+      --accent4:#66e0ff;
+      --glass: rgba(255,255,255,0.08);
+      --glass-strong: rgba(255,255,255,0.14);
+      --radius: 20px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --maxw: 1180px;
+    }
+    *{box-sizing:border-box}
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      color:var(--ink);
+      margin:0;
+      background:
+        radial-gradient(1800px 900px at 90% -10%, rgba(255,170,0,.12), transparent 60%),
+        radial-gradient(1400px 800px at -10% 10%, rgba(87,0,255,.25), transparent 60%),
+        linear-gradient(160deg, #1a102b 0%, #0f0b21 45%, #0a0920 100%);
+    }
+    a{color:inherit;text-decoration:none}
+    .gradient-txt{background:linear-gradient(90deg,var(--accent4),var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent}
+    .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 1.1rem;border-radius:999px;font-weight:700;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;border:0;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s ease,filter .2s ease}
+    .btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.25)}
+    .container{width:100%;max-width:var(--maxw);margin:auto;padding:0 20px}
+    .card{background:var(--glass);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);box-shadow:var(--shadow)}
+    h1{font-size:clamp(2.2rem,5vw,4rem);margin:10px 0 14px;font-weight:900;line-height:1.05}
+    p.lead{font-size:1.2rem;color:var(--muted);line-height:1.6}
+
+    /* Pricing section */
+    .pricing {display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:40px;}
+    .price-card {padding:30px;text-align:center;background:var(--glass-strong);border-radius:var(--radius);}
+    .price-card h3{font-size:1.4rem;margin:0 0 10px}
+    .price-card .price{font-size:2.2rem;font-weight:900;margin-bottom:8px}
+    .price-card .note{color:var(--muted);font-size:.95rem;margin-bottom:14px}
+
+    /* Form */
+    .form-wrap{display:block;grid-template-columns:1fr 1fr;gap:28px}
+    form{padding:24px}
+    label{font-weight:700;margin:8px 0 6px;display:block}
+    .input,textarea,select{width:100%;padding:14px 16px;border-radius:14px;color:#fff;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.25);font-size:1rem}
+    .input:focus{border-color:var(--accent2);box-shadow:0 0 0 4px rgba(255,95,183,.15)}
+    .note{font-size:.9rem;color:var(--muted)}
+    .success,.error{display:none;margin-top:10px;font-weight:700}
+    .success{color:#b1f5c4}.error{color:#ffb2c2}
+
+    footer{padding:40px 0;text-align:center;color:var(--muted);font-size:.9rem}
+    @media(max-width:960px){.form-wrap{grid-template-columns:1fr}}
+  </style>
   <style>
     :root{
       --bg:#0e0b16;
@@ -66,7 +121,8 @@
     h1{font-size: clamp(2.2rem, 5vw, 4rem);line-height:1.05;margin:10px 0 14px;font-weight:900}
     p.lead{font-size: clamp(1.05rem, 1.6vw, 1.2rem);line-height:1.6;color:var(--muted)}
     .badges{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 26px}
-    .badge{padding:.45rem .75rem;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:var(--glass-strong);font-weight:600;font-size:.85rem}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,0.1);font-weight:600;font-size:.85rem;backdrop-filter:blur(5px);transition:all 0.3s ease}
+    .badge i{font-size:1rem;color:var(--accent4)}
     .media{padding:10px;}
     .media img{width:100%;height:auto;display:block;border-radius:18px}
 
@@ -91,8 +147,11 @@
     .tool strong{font-size:1rem}
 
     /* Preorder form */
-    .form-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:stretch}
-    form{padding:24px}
+    .form-wrap{display:block;width:100%;max-width:1200px;margin:0 auto;padding:0 20px}
+    @media (min-width: 1024px) {
+      .form-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:stretch}
+    }
+    form{padding:24px;margin-bottom:30px}
     label{display:block;font-weight:700;margin:8px 0 6px}
     .input, select, textarea{width:100%;padding:14px 16px;border-radius:14px;color:#fff;
       background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.25);outline:none;
@@ -257,6 +316,11 @@
       from { opacity: 0; transform: translateX(-50px); }
       to { opacity: 1; transform: translateX(0); }
     }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 20px rgba(168,107,255,0.5); }
+      50% { transform: scale(1.03); box-shadow: 0 0 30px rgba(168,107,255,0.8); }
+      100% { transform: scale(1); box-shadow: 0 0 20px rgba(168,107,255,0.5); }
+    }
     @keyframes pulseGlow {
       0%, 100% { box-shadow: 0 0 20px rgba(102, 224, 255, 0.3); }
       50% { box-shadow: 0 0 40px rgba(102, 224, 255, 0.6); }
@@ -308,7 +372,7 @@
       <div style="display:flex;gap:10px;align-items:center">
         <a class="btn ghost" href="#features">Features</a>
         <a class="btn ghost" href="#tools">Tools</a>
-        <a class="btn" href="#preorder">Pre‑order</a>
+        <a class="btn" href="#get-app">Get the App</a>
       </div>
       <!-- Hamburger Menu for Mobile -->
       <button class="hamburger" aria-label="Toggle mobile menu">
@@ -323,7 +387,7 @@
       <div class="mobile-menu-content">
         <a href="#features" onclick="closeMobileMenu()">Features</a>
         <a href="#tools" onclick="closeMobileMenu()">Tools</a>
-        <a href="#preorder" onclick="closeMobileMenu()">Pre‑order</a>
+        <a href="#get-app" onclick="closeMobileMenu()">Get the App</a>
       </div>
     </div>
   </header>
@@ -333,25 +397,41 @@
     <div class="container grid hero-grid">
       <div>
         <div class="badges">
-          <span class="badge">Decentralized network</span>
-          <span class="badge">Proprietary algorithms</span>
-          <span class="badge">95% lossless compression</span>
+          <span class="badge"><i class="fab fa-apple"></i> iOS</span>
+          <span class="badge"><i class="fab fa-android"></i> Android</span>
+          <span class="badge"><i class="fab fa-windows"></i> Windows</span>
+          <span class="badge"><i class="fab fa-apple"></i> macOS</span>
         </div>
         <h1>
           The first <span class="gradient-txt">decentralized cloud</span>
           that feels instant.
         </h1>
         <p class="lead">
-        Store more with <strong>95% lossless compression</strong>. Collaborate with near‑zero latency. All powered by SP Cloud’s unique bandwidth optimization so bad internet connection is not a problem anymore. 
+          
+        Store more with <strong>95% lossless compression</strong>. Collaborate with near‑zero latency. All powered by SP Cloud's unique bandwidth optimization so bad internet connection is not a problem anymore. 
         </p>
         <div style="margin-top:20px;">
           <p style="font-size:1.5rem; font-weight:600; text-align:left;">
-            <span class="gradient-txt">Preregister now for free and get 3 free months</span>
+            <span class="gradient-txt">Get 30 days free with any plan</span>
           </p>
         </div>
-        <div style="display:flex;gap:12px;margin-top:18px">
-          <a class="btn" href="#preorder">Pre‑order access</a>
-          <a class="btn ghost" href="promo.html">Watch promo</a>
+        
+        <div style="margin: 30px 0;">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a class="btn" href="#get-app" style="min-width:180px;font-size:1.1rem;padding:14px 24px;animation:pulse 2s infinite;box-shadow:0 0 20px rgba(168,107,255,0.5);">
+              <i class="fas fa-download" style="margin-right:8px"></i> Download Now
+            </a>
+            <a class="btn ghost" href="#get-app" style="min-width:140px;padding:14px 20px;">
+              <i class="fas fa-tags" style="margin-right:8px"></i> View Plans
+            </a>
+            <a class="btn ghost" href="promo.html" style="min-width:140px;padding:14px 20px;">
+              <i class="fas fa-play" style="margin-right:8px"></i> Watch Demo
+            </a>
+          </div>
+          <p style="margin:12px 0 0;color:var(--muted);font-size:0.9rem;">
+            <i class="fas fa-shield-alt" style="margin-right:6px;color:var(--accent4)"></i>
+            Secure & Private • No Credit Card Required • 30-Day Free Trial
+          </p>
         </div>
         <div class="stats">
           <div class="stat"><div class="num">95%</div><div class="cap">Lossless compression</div></div>
@@ -452,53 +532,161 @@
     </div>
   </section>
 
-  <!-- PREORDER -->
-  <section id="preorder">
+  <!-- GET THE APP -->
+  <section id="get-app">
     <div class="container">
       <div class="form-wrap">
         <div class="card" style="padding:26px 24px">
-          <h2 class="section-title">Get early access</h2>
-          <p class="section-sub">Join the waitlist to be among the first to try SP Cloud. We’ll notify you as soon as your region is live.</p>
-          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;color:#e9e7ff">
-            <li>• Priority invites and updates</li>
-            <li>• Early adopter perks</li>
-            <li>• Get 3 months of unlimited storage and access to all tools for free</li>
-            <li>• Always be an SP Premuim User (we won't raise prices on you ;) )</li>
-            <li>• Get an extra badge beside your name</li>
+          <h2 class="section-title">Get the App Now</h2>
+          <p class="section-sub">Complete the form and we'll email you download instructions. Currently available for <strong>columbia.edu</strong> email addresses.</p>
+          
+          <div style="margin: 24px 0;">
+            <h3 style="margin: 0 0 16px 0; color: var(--accent4);">Pricing Plans</h3>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px;">
+              <!-- Mobile-first single column, changes to 3 columns on larger screens -->
+              <style>
+                @media (min-width: 768px) {
+                  #pricing-plans-container { grid-template-columns: repeat(3, 1fr); }
+                }
+                @media (min-width: 480px) and (max-width: 767px) {
+                  #pricing-plans-container { grid-template-columns: repeat(2, 1fr); }
+                }
+              </style>
+              <!-- Free Plan -->
+              <div class="card" style="padding: 20px; background: linear-gradient(135deg, rgba(255,255,255,.02), rgba(255,255,255,.05)); height: 100%;">
+                <h3 style="margin: 0 0 10px 0; color: var(--muted);">Free</h3>
+                <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 15px;">$0<span style="font-size: 1rem; font-weight: normal; color: var(--muted);">/month</span></div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; display: grid; gap: 8px; color: #e9e7ff; font-size: 0.95rem;">
+                  <li>• 15GB Storage (3GB compressed)</li>
+                  <li>• 1 hour bandwidth optimization/day</li>
+                  <li>• Basic cloud tools</li>
+                  <li>• Standard support</li>
+                </ul>
+                <div style="font-size: 0.9rem; color: var(--accent4); font-weight: 500;">No credit card required</div>
+              </div>
 
-          </ul>
-        </div>
-        <form id="preorderForm" class="card" novalidate>
-          <input type="text" name="company" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true"> <!-- honeypot -->
-          <div class="row">
-            <div>
-              <label for="name">Name</label>
-              <input class="input" type="text" id="name" name="name" placeholder="Your name" required>
-            </div>
-            <div>
-              <label for="email">Email</label>
-              <input class="input" type="email" id="email" name="email" placeholder="you@company.com" required>
+              <!-- Basic Plan -->
+              <div class="card" style="padding: 20px; background: linear-gradient(135deg, rgba(168,107,255,.1), rgba(255,95,183,.1)); position: relative; border: 1px solid rgba(168,107,255,.2); height: 100%;">
+                <div style="position: absolute; top: 10px; right: 10px; background: var(--accent3); color: #000; font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; font-weight: 600;">POPULAR</div>
+                <h3 style="margin: 0 0 10px 0; color: var(--accent3);">Basic</h3>
+                <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 15px;">$4.99<span style="font-size: 1rem; font-weight: normal; color: var(--muted);">/month</span></div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; display: grid; gap: 8px; color: #e9e7ff; font-size: 0.95rem;">
+                  <li>• 100GB Storage (5GB compressed)</li>
+                  <li>• 50GB bandwidth optimization</li>
+                  <li>• Limited cloud tools access</li>
+                  <li>• Priority support</li>
+                </ul>
+                <div style="font-size: 0.9rem; color: var(--accent3); font-weight: 500;">30-day free trial</div>
+              </div>
+
+              <!-- Pro Plan -->
+              <div class="card" style="padding: 20px; background: linear-gradient(135deg, rgba(255,95,183,.1), rgba(102,224,255,.1)); position: relative; border: 1px solid rgba(102,224,255,.2); height: 100%;">
+                <div style="position: absolute; top: 10px; right: 10px; background: var(--accent4); color: #000; font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; font-weight: 600;">BEST VALUE</div>
+                <h3 style="margin: 0 0 10px 0; color: var(--accent4);">Pro</h3>
+                <div style="font-size: 1.8rem; font-weight: 900; margin-bottom: 15px;">$9.99<span style="font-size: 1rem; font-weight: normal; color: var(--muted);">/month</span></div>
+                <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; display: grid; gap: 8px; color: #e9e7ff; font-size: 0.95rem;">
+                  <li>• 1TB Storage (<30GB compressed)</li>
+                  <li>• 200GB bandwidth optimization</li>
+                  <li>• Full cloud tools access</li>
+                  <li>• 24/7 priority support</li>
+                  <li>• AI trainer & optimization tools</li>
+                  <li>• Exclusive early access to new features (best for developers and scientists)</li>
+                </ul>
+                <div style="font-size: 0.9rem; color: var(--accent4); font-weight: 500;">30-day free trial</div>
+              </div>
             </div>
           </div>
-          <label for="ref">How did you hear about SP Cloud?</label>
-          <select id="ref" name="source" required>
-            <option value="" disabled selected>Select one…</option>
-            <option>LinkedIn</option>
-            <option>Friend/colleague</option>
-            <option>News/Blog</option>
-            <option>Event/Conference</option>
-            <option>Other</option>
+        </div>
+        
+        <form id="appForm" class="card" novalidate style="padding: 24px; margin-top: 30px;">
+          <h3 style="margin: 0 0 20px 0; font-size: 1.4rem;">Download Request</h3>
+          <input type="text" name="company" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true" required>
+          
+          <div class="row" style="display: flex; flex-direction: column; gap: 20px;">
+            <style>
+              @media (min-width: 768px) {
+                .row { flex-direction: row !important; }
+                .row > div { flex: 1; }
+              }
+            </style>
+            <div>
+              <label for="name">Full Name</label>
+              <input class="input" type="text" id="name" name="name" placeholder="Your full name" required>
+            </div>
+            <div>
+              <label for="email">Email (@columbia.edu)</label>
+              <input class="input" type="email" id="email" name="email" placeholder="your@columbia.edu" required>
+            </div>
+          </div>
+          
+          <label for="devices">Number of Devices</label>
+          <select id="devices" name="devices" class="input" required>
+            <option value="" disabled selected>Select number of devices</option>
+            <option value="1">1 Device</option>
+            <option value="2">2 Devices</option>
+            <option value="3">3 Devices</option>
+            <option value="4">4 Devices</option>
+            <option value="5">5+ Devices (contact us)</option>
           </select>
-          <label for="msg">Anything we should know? <span class="note">(optional)</span></label>
-          <textarea id="msg" name="message" rows="4" placeholder="Team size, use‑case, region…"></textarea>
-          <label class="terms">
+          
+          <label style="margin-top: 15px;">Platforms (select all that apply)</label>
+          <div style="display: grid; gap: 10px; margin: 10px 0 20px;" id="platforms-container">
+            <p style="margin: 0 0 5px 0; color: var(--muted); font-size: 0.9rem;">Select at least one platform <span style="color: #ff4d6d">*</span></p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <label style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.03);">
+                <input type="checkbox" name="platform" value="ios" required>
+                <span>iOS</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.03);">
+                <input type="checkbox" name="platform" value="android">
+                <span>Android</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.03);">
+                <input type="checkbox" name="platform" value="windows">
+                <span>Windows</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.03);">
+                <input type="checkbox" name="platform" value="macos">
+                <span>macOS</span>
+              </label>
+            </div>
+          </div>
+          
+          <label for="plan">Select Plan</label>
+          <select id="plan" name="plan" class="input" required>
+            <option value="" disabled selected>Choose your plan</option>
+            <option value="free">Free - $0/month (15GB storage, 3GB compressed, 1 hour bandwidth optimization)</option>
+            <option value="basic">Basic - $4.99/month (100GB storage, 5GB compressed, 50GB bandwidth, Limited cloud tools)</option>
+            <option value="pro">Pro - $9.99/month (1TB storage, <30GB compressed, 200GB bandwidth, Full access + future tools)</option>
+          </select>
+          <p style="font-size: 0.85rem; color: var(--muted); margin: 5px 0 0 0;">All paid plans include a 30-day free trial. Cancel anytime.</p>
+          
+          <label class="terms" style="margin: 20px 0 10px;">
             <input type="checkbox" id="terms" required>
-            <span>I consent to <a href="#" class="gradient-txt">Receive Emails</a>.</span>
+            <span>I agree to receive the <a class="gradient-txt">Terms of Service</a> and <a class="gradient-txt">Privacy Policy</a></span>
           </label>
-          <button class="btn" type="submit">Join the waitlist</button>
-          <div class="success" id="okMsg">Thanks! You’re on the list — check your inbox.</div>
-          <div class="error" id="errMsg">Please fill all required fields correctly.</div>
-          <p class="note">We’ll only use your email for SP Cloud updates. No spam.</p>
+          
+          <button class="btn" type="submit" style="width: 100%; margin: 10px 0 15px; padding: 14px;" id="submitBtn">
+            <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Get Download Link
+          </button>
+          
+          <div class="success" id="okMsg" style="display: none; padding: 12px; background: rgba(177, 245, 196, 0.1); border-radius: 8px; border-left: 3px solid var(--accent4); margin: 10px 0;"></div>
+          <div class="error" id="errMsg" style="display: none; padding: 12px; background: rgba(255, 178, 194, 0.1); border-radius: 8px; border-left: 3px solid #ff4d6d; margin: 10px 0; color: #ff4d6d; font-weight: 500;"></div>
+          
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin: 0 0 10px 0; color: var(--muted);">Don't have a columbia.edu email?</p>
+            <button type="button" class="btn ghost" style="width: 100%;" onclick="document.getElementById('notify-form').style.display='block';this.style.display='none';">
+              Notify me when available
+            </button>
+          </div>
+          
+          <div id="notify-form" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin: 0 0 15px 0; color: var(--muted);">Enter your email to be notified when SP Cloud is available for your domain:</p>
+            <div style="display: flex; gap: 10px;">
+              <input type="email" id="notify-email" class="input" placeholder="your@email.com" style="flex: 1;">
+              <button type="button" class="btn" onclick="alert('Thanks! We\'ll notify you when SP Cloud is available for your domain.');">Notify Me</button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
@@ -526,13 +714,136 @@
     </div>
   </footer>
 
-  <script type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function() {
+      emailjs.init("6QCmp2AnjIvZX_kx2"); // Replace with your EmailJS public key
+    })();
+  </script>
   <script type="text/javascript">
   emailjs.init('6QCmp2AnjIvZX_kx2')
 </script>
 
   <script>
+    // Form submission handler with EmailJS integration
+    document.getElementById('appForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form elements
+      const form = e.target;
+      const name = form.querySelector('#name').value.trim();
+      const email = form.querySelector('#email').value.trim();
+      const devices = form.querySelector('#devices').value;
+      const plan = form.querySelector('#plan').value;
+      const platforms = Array.from(form.querySelectorAll('input[name="platform"]:checked')).map(cb => cb.value);
+      const termsAccepted = form.querySelector('#terms').checked;
+      
+      // Get message elements
+      const successMsg = document.getElementById('okMsg');
+      const errorMsg = document.getElementById('errMsg');
+      const submitBtn = document.getElementById('submitBtn');
+      const originalBtnText = submitBtn.innerHTML;
+      
+      // Hide previous messages and show loading state
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      
+      // Validate all required fields
+      const errors = [];
+      
+      if (!name) errors.push('Full Name');
+      if (!email) errors.push('Email');
+      if (!devices) errors.push('Number of Devices');
+      if (platforms.length === 0) errors.push('At least one Platform');
+      if (!plan) errors.push('Plan');
+      if (!termsAccepted) errors.push('Terms & Conditions');
+      
+      // If there are validation errors
+      if (errors.length > 0) {
+        errorMsg.innerHTML = `Please fill in all required fields: ${errors.join(', ')}`;
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        
+        // Scroll to the first error
+        const firstError = document.querySelector('input:invalid, select:invalid, [required]:not(:checked)');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstError.focus();
+        }
+        return;
+      }
+      
+      // Validate email format
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorMsg.innerHTML = 'Please enter a valid email address';
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        document.getElementById('email').focus();
+        return;
+      }
+      
+      // Prepare email template parameters
+      const templateParams = {
+        from_name: name,
+        from_email: email,
+        to_email: email,
+        devices: devices,
+        plan: plan,
+        platforms: platforms.join(', '),
+        is_columbia: email.endsWith('@columbia.edu') ? 'Yes' : 'No'
+      };
+      
+      // Send email using EmailJS
+      emailjs.send('default_service', 'template_iq1b5eh', templateParams)
+        .then(function(response) {
+          console.log('SUCCESS!', response.status, response.text);
+          
+          // Show success message based on email domain
+          if (email.endsWith('@columbia.edu')) {
+            successMsg.innerHTML = 'Check your email for download instructions!';
+          } else {
+            successMsg.innerHTML = 'Thank you for your interest! We\'ll notify you when SP Cloud is available for your domain.';
+          }
+          successMsg.style.display = 'block';
+          
+          // Reset form
+          form.reset();
+          
+          // Scroll to success message
+          successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, function(error) {
+          console.error('FAILED...', error);
+          
+          // Show success message to user even if email fails (as per requirement)
+          if (email.endsWith('@columbia.edu')) {
+            successMsg.innerHTML = 'Thank you! Your request has been received. Check your email for download instructions soon.';
+          } else {
+            successMsg.innerHTML = 'Thank you for your interest! We\'ll notify you when SP Cloud is available for your domain.';
+          }
+          successMsg.style.display = 'block';
+          
+          // Also log the error in the console
+          errorMsg.innerHTML = 'Note: There was an issue sending the email, but your request has been received.';
+          errorMsg.style.display = 'block';
+          
+          // Reset form
+          form.reset();
+          
+          // Scroll to messages
+          successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })
+        .finally(() => {
+          // Re-enable the submit button
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        });
+    });
+
     // Smooth anchor scroll
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
