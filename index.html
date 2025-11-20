@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" href="logo.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
     <style>
     :root {
       --bg:#0e0b16;
@@ -106,12 +109,60 @@
     .btn:hover{transform: translateY(-2px); filter: brightness(1.08)}
     .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.25)}
     .container{width:100%;max-width:var(--maxw);margin-inline:auto;padding:0 20px}
-    .hero{position:relative;padding:15px 0 50px}
+    .hero {
+      position: relative;
+      padding: 80px 0 80px;
+      margin-top: -40px;
+
+      /* Softer continuation instead of a new page */
+      background: linear-gradient(
+        180deg,
+        rgba(10,9,32,0) 0%,
+        rgba(10,9,32,0.30) 25%,
+        rgba(10,9,32,0.75) 60%,
+        rgba(10,9,32,1) 100%
+      );
+
+      backdrop-filter: blur(6px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .hero {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .hero.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      left:0;right:0;top:-160px;
+      height:160px;
+      background:linear-gradient(180deg, rgba(10,9,32,0), rgba(10,9,32,0.85));
+      z-index:-1;
+      pointer-events:none;
+    }
     .hero::after{content:"";position:absolute;inset:auto -240px -180px -240px;height:520px;z-index:-1;
       background: radial-gradient(50% 60% at 50% 40%, rgba(255,95,183,.28), transparent 70%),
                   radial-gradient(50% 60% at 70% 30%, rgba(102,224,255,.18), transparent 70%),
                   radial-gradient(60% 70% at 40% 70%, rgba(168,107,255,.30), transparent 70%);
       filter: blur(60px);opacity:.8}
+    #canvas-container{
+      position: relative;
+    }
+    #canvas-container::after{
+      content:"";
+      position:absolute;
+      left:0;right:0;bottom:-2px;
+      height:220px;
+      background:linear-gradient(180deg, rgba(10,9,32,0), #0f0b21 60%, #120d26 100%);
+      z-index:-50;
+      pointer-events:none;
+    }
     .grid{display:grid;gap:26px}
     .hero-grid{grid-template-columns: 1.2fr .8fr;align-items:center}
     .card{background:var(--glass);backdrop-filter: blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);box-shadow:var(--shadow)}
@@ -399,12 +450,106 @@
       .features,.tools{grid-template-columns:1fr}
       .row{grid-template-columns:1fr}
     }
+
+    .smooth-hero {
+  position: relative;
+  padding: 120px 0 120px;
+  text-align: center;
+  transform: translateY(40px);
+  opacity: 0;
+  transition: all .8s ease;
+  
+  background: linear-gradient(
+    180deg,
+    rgba(10,9,32,0) 0%,
+    rgba(10,9,32,0.4) 35%,
+    rgba(10,9,32,0.8) 75%,
+    rgba(10,9,32,1) 100%
+  );
+  backdrop-filter: blur(8px);
+}
+
+.smooth-hero.in-view {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Centered inner block */
+.hero-inner {
+  max-width: 780px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+/* Title */
+.hero-title {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.15;
+  font-weight: 900;
+  margin-bottom: 18px;
+}
+
+/* Subtitle */
+.hero-sub {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+
+/* Buttons */
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+/* Scroll Indicator */
+#scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 34px;
+  color: #ffffff;
+  opacity: 0.8;
+  animation: scrollBounce 2s infinite ease-in-out;
+  z-index: 50;
+  cursor: pointer;
+  transition: opacity 0.4s ease;
+}
+
+#scroll-indicator.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes scrollBounce {
+  0% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 10px); }
+  100% { transform: translate(-50%, 0); }
+}
+
   </style>
 </head>
 <body>
-  <!-- NAV -->
-  <header class="container" style="padding:20px 20px 0">
-    <nav class="card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:999px">
+  <!-- 3D Background Canvas -->
+
+  
+  <!-- Main Content -->
+  <div style="position: relative; z-index: 1; min-height: 100vh; overflow-x: hidden; background: transparent;">
+
+  <canvas id="background-particles" style="
+  position: fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  pointer-events:none;
+  z-index:-2000;
+"></canvas>
+
+  
+  <header class="container" style="z-index:100; position: fixed; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; max-width: 1400px; margin: 0 auto; width: 100%; left: 50%; transform: translateX(-50%);">
+    <nav class="card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:999px; width: 100%; max-width: 1400px;">
       <div class="logo-row">
         <div class="logo">
           <!-- Replace src with your path. Example local path: ./assets/sp_logo.png -->
@@ -434,61 +579,58 @@
       </div>
     </div>
   </header>
+   <div id="canvas-container" style="position: relative; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1000; overflow: hidden; background: linear-gradient(160deg, #1a102b 0%, #0f0b21 45%, #0a0920 100%);">
+    <div id="scene-container" style="width: 100%; height: 100%; display: block; position: absolute; top: 0; left: 0;">
+            <!-- Scroll Icon -->
+      <div id="scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+      </div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container grid hero-grid">
-      <div>
-        <div class="badges">
-          <span class="badge"><i class="fab fa-apple"></i> iOS</span>
-          <span class="badge"><i class="fab fa-android"></i> Android</span>
-          <span class="badge"><i class="fab fa-windows"></i> Windows</span>
-          <span class="badge"><i class="fab fa-apple"></i> macOS</span>
+      <div id="quote-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; max-width: 90%; z-index: 10;">
+        <div class="quote-card" style="background: rgba(10, 9, 32, 0.9); backdrop-filter: blur(16px); padding: 40px 60px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 25px 70px rgba(0,0,0,0.45); max-width: 820px; opacity: 0; transform: translateY(30px) scale(0.95);">
+          <p style="font-size: 2.2rem; font-weight: 300; line-height: 1.4; margin: 0 0 20px 0; background: linear-gradient(90deg, #fff, #e0e0ff); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+            "The fastest cloud ever—95% smaller files, 5ms latency, real-time streaming, editing, and collaboration"
+          </p>
+          <div class="quote-divider" style="height: 3px; width: 100px; background: linear-gradient(90deg, var(--accent4), var(--accent1)); margin: 0 auto 10px; border-radius: 3px; transform-origin: center;"></div>
+          <p style="font-size: 1.1rem; color: #c3bce6; margin: 20px 0 0 0; opacity: 0.9;">Your entire digital life samaller and yours on SP Cloud </p>
         </div>
-        <h1>
+      </div>
+      <div id="landmark-info" style="position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(0,0,0,0.8); padding: 25px 40px; border-radius: 15px; max-width: 600px; text-align: center; opacity: 0; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10; transform-style: preserve-3d; perspective: 1000px;">
+        <h3 id="landmark-title" style="margin: 0 0 10px 0; color: var(--accent4); font-size: 1.8rem; font-weight: 700; text-shadow: 0 0 15px rgba(102, 224, 255, 0.5); letter-spacing: 0.5px; transform-style: preserve-3d; backface-visibility: hidden; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        </h3>
+        <p id="landmark-desc" style="margin: 0; font-size: 1.1rem; line-height: 1.6; color: #e0e0ff; max-width: 500px; margin: 0 auto; transform-style: preserve-3d; backface-visibility: hidden; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        </p>
+        <div id="landmark-info" style="::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #ff5fb7, #66e0ff, #a86bff); z-index: -1; border-radius: 17px; opacity: 0.7; filter: blur(5px); animation: gradient 8s ease infinite; background-size: 200% 200%; }"></div>
+      </div>
+    </div>
+  </div>
+  <!-- HERO -->
+      <section class="hero smooth-hero">
+      <div class="hero-inner">
+
+        <h1 class="hero-title">
           The first <span class="gradient-txt">decentralized cloud</span>
           that feels instant.
         </h1>
-        <p class="lead">
-          
-        Store more with <strong>95% lossless compression</strong>. Collaborate with near‑zero latency. All powered by SP Cloud's unique bandwidth optimization so bad internet connection is not a problem anymore. 
+
+        <p class="hero-sub">
+          Store more with <strong>95% lossless compression</strong>. Collaborate with near-zero latency.  
+          Built for speed, privacy, and the real world.
         </p>
-        <div style="margin-top:20px;">
-          <p style="font-size:1.5rem; font-weight:600; text-align:left;">
-            <span class="gradient-txt">Get 30 days free with any plan</span>
-          </p>
+        <p style="color: var(--accent4); margin-top: 8px; font-size: 1rem; opacity: .9;">
+          Currently in <strong>Beta</strong> — early access available.
+        </p>
+
+        <div class="hero-buttons">
+          <a class="btn" href="#get-app">
+            <i class="fas fa-download"></i> Download Now
+          </a>
+          <a class="btn ghost" href="#features">Learn More</a>
         </div>
-        
-        <div style="margin: 30px 0;">
-          <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <a class="btn" href="#get-app" style="min-width:180px;font-size:1.1rem;padding:14px 24px;animation:pulse 2s infinite;box-shadow:0 0 20px rgba(168,107,255,0.5);">
-              <i class="fas fa-download" style="margin-right:8px"></i> Download Now
-            </a>
-            <a class="btn ghost" href="#get-app" style="min-width:140px;padding:14px 20px;">
-              <i class="fas fa-tags" style="margin-right:8px"></i> View Plans
-            </a>
-            <a class="btn ghost" href="promo.html" style="min-width:140px;padding:14px 20px;">
-              <i class="fas fa-play" style="margin-right:8px"></i> Watch Demo
-            </a>
-          </div>
-          <p style="margin:12px 0 0;color:var(--muted);font-size:0.9rem;">
-            <i class="fas fa-shield-alt" style="margin-right:6px;color:var(--accent4)"></i>
-            Secure & Private • No Credit Card Required • 30-Day Free Trial
-          </p>
-        </div>
-        <div class="stats">
-          <div class="stat"><div class="num">95%</div><div class="cap">Lossless compression</div></div>
-          <div class="stat"><div class="num">5ms</div><div class="cap">Audio/video calls and texing latency</div></div>
-          <div class="stat"><div class="num">99%</div><div class="cap">Uptime(instant search/uploads)</div></div>
-          <div class="stat"><div class="num">10+</div><div class="cap">Everyday tools</div></div>
-        </div>
+
       </div>
-      <div class="media card">
-        <!-- Hero graphic -->
-        <img src="design_graphics_1.png" alt="SP Cloud network graphic" />
-      </div>
-    </div>
-  </section>
+    </section>
+
 
   <!-- FEATURES -->
   <section id="features">
@@ -747,7 +889,7 @@
     <div class="container foot">
       <div class="logo-row">
         <div class="logo"><img src="logo.png" alt="SP logo"/></div>
-        <div>© <span id="year"></span> SP Cloud. All rights reserved.</div>
+        <div>&copy; 2025 SP Cloud Tech Inc. All rights reserved.</div>
       </div>
       <!-- <div style="display:flex;gap:16px">
         <a class="gradient-txt" href="#">Privacy</a>
@@ -756,6 +898,7 @@
       </div> -->
     </div>
   </footer>
+  </div>
 
   <!-- <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script> -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -770,6 +913,8 @@
 
   <script>
     // Form submission handler with EmailJS integration
+
+    
     document.getElementById('appForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -905,6 +1050,10 @@
       });
     }, observerOptions);
     document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    observer.observe(document.querySelector(".hero"));
+    observer.observe(document.querySelector(".smooth-hero"));
+
+
 
     // Simple form validation + EmailJS submit
     // const form = document.getElementById('preorderForm');
@@ -984,6 +1133,1780 @@
         }
       });
     });
+
+    // Three.js Scene Setup
+    let scene, camera, renderer, controls;
+    let objects = [];
+    let currentLandmark = 0;
+    let currentModel = null;
+    let clock = new THREE.Clock();
+    let mixer = null;
+    let isFirstLandmark = true; // Flag for first landmark transition
+    let sceneReady = false;
+    let quoteIntroReady = false;
+    let introLaunched = false;
+    let firstTransitionDone = false;
+    let quoteFloatTween = null;
+    let firstModelPrepared = false;
+    let firstModelVisible = false;
+
+    // Preload first landmark model
+    let preloadedModel = null;
+    
+    // 3D Models and Animations
+    const models = {
+      aetherGateway: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Core prism
+          const prismMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffbaf9,
+            emissive: 0x5c36ff,
+            emissiveIntensity: 0.8,
+            roughness: 0.25,
+            metalness: 0.5,
+            transparent: true,
+            opacity: 0.85,
+            clearcoat: 1,
+            clearcoatRoughness: 0.1
+          });
+          const prism = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(1, 2),
+            prismMaterial
+          );
+          group.add(prism);
+          
+          // Halo rings
+          const halos = [];
+          for (let i = 0; i < 3; i++) {
+            const haloMaterial = new THREE.MeshBasicMaterial({
+              color: 0x66e0ff,
+              transparent: true,
+              opacity: 0.35 + i * 0.2,
+              side: THREE.DoubleSide,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false
+            });
+            const halo = new THREE.Mesh(
+              new THREE.TorusGeometry(1.2 + i * 0.35, 0.04 + i * 0.01, 32, 128),
+              haloMaterial
+            );
+            halo.rotation.x = Math.PI / 2;
+            halo.userData = {
+              speed: 0.4 + i * 0.1,
+              direction: i % 2 === 0 ? 1 : -1
+            };
+            group.add(halo);
+            halos.push(halo);
+          }
+          
+          // Crystal shards
+          const shards = [];
+          for (let i = 0; i < 12; i++) {
+            const shard = new THREE.Mesh(
+              new THREE.ConeGeometry(0.05, 0.4, 4),
+              new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                emissive: 0x66e0ff,
+                emissiveIntensity: 0.5,
+                shininess: 90
+              })
+            );
+            const radius = 1.6 + Math.random() * 0.8;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            shard.position.set(
+              Math.sin(phi) * Math.cos(theta) * radius,
+              Math.cos(phi) * radius * 0.5,
+              Math.sin(phi) * Math.sin(theta) * radius
+            );
+            shard.userData = {
+              offset: Math.random() * Math.PI * 2,
+              radius,
+              drift: 0.2 + Math.random() * 0.4
+            };
+            group.add(shard);
+            shards.push(shard);
+          }
+          
+          // Particle aura
+          const particleCount = 140;
+          const positions = new Float32Array(particleCount * 3);
+          const basePositions = new Float32Array(particleCount * 3);
+          const offsets = new Float32Array(particleCount);
+          
+          for (let i = 0; i < particleCount; i++) {
+            const radius = 2.2 + Math.random() * 1.5;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            const x = radius * Math.sin(phi) * Math.cos(theta);
+            const y = radius * Math.sin(phi) * Math.sin(theta);
+            const z = radius * Math.cos(phi);
+            positions[i * 3] = x;
+            positions[i * 3 + 1] = y;
+            positions[i * 3 + 2] = z;
+            basePositions[i * 3] = x;
+            basePositions[i * 3 + 1] = y;
+            basePositions[i * 3 + 2] = z;
+            offsets[i] = Math.random() * Math.PI * 2;
+          }
+          
+          const particleGeometry = new THREE.BufferGeometry();
+          particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+          const particleMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.06,
+            transparent: true,
+            opacity: 0.55,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          });
+          const particles = new THREE.Points(particleGeometry, particleMaterial);
+          particles.userData = { basePositions, offsets };
+          group.add(particles);
+          
+          // Store the original scale of the group
+          const originalScale = 2.8; // This should match the scale in landmarks
+          
+          return {
+            model: group,
+            animate: (time) => {
+              // Only animate the internal components, not the group itself
+              prism.rotation.x = time * 0.4;
+              prism.rotation.y = time * 0.6;
+              prism.material.emissiveIntensity = 0.8 + Math.sin(time * 2) * 0.2;
+              
+              // Animate halos with scaling, but keep it subtle
+              halos.forEach((halo, index) => {
+                halo.rotation.z = time * halo.userData.speed * halo.userData.direction * 0.5;
+                // Keep the scale animation but make it more subtle
+                const scale = 1 + Math.sin(time * 0.8 + index) * 0.04;
+                halo.scale.set(scale, scale, 1); // Only scale X and Y, not Z
+              });
+              
+              // Animate shards with position only, no scaling
+              shards.forEach((shard, i) => {
+                const t = time * 0.6 + shard.userData.offset;
+                shard.position.x = basePositions[i * 3] * (1 + Math.sin(t) * 0.1 * shard.userData.drift);
+                shard.position.y = basePositions[i * 3 + 1] * (1 + Math.cos(t * 0.7) * 0.1 * shard.userData.drift);
+                shard.position.z = basePositions[i * 3 + 2] * (1 + Math.sin(t * 0.5) * 0.1 * shard.userData.drift);
+                shard.rotation.x = time * 0.2;
+                shard.rotation.y = time * 0.3;
+                // Ensure shards maintain their scale
+                shard.scale.set(1, 1, 1);
+              });
+              
+              // Animate particles with position only
+              const particlePositions = particles.geometry.attributes.position;
+              const basePos = particles.userData.basePositions;
+              const offsets = particles.userData.offsets;
+              
+              for (let i = 0; i < particlePositions.count; i++) {
+                const t = time * 0.5 + offsets[i];
+                const drift = 0.05 + (i % 3) * 0.03;
+                particlePositions.setX(i, basePos[i * 3] * (1 + Math.sin(t * 0.8) * 0.1 * drift));
+                particlePositions.setY(i, basePos[i * 3 + 1] * (1 + Math.cos(t * 0.7) * 0.1 * drift));
+                particlePositions.setZ(i, basePos[i * 3 + 2] * (1 + Math.sin(t * 0.9) * 0.1 * drift));
+              }
+              
+              particlePositions.needsUpdate = true;
+              
+              // Ensure the main group maintains its scale
+              if (group.scale.x !== originalScale) {
+                group.scale.set(originalScale, originalScale, originalScale);
+              }
+            }
+          };
+        }
+      },
+      compression: {
+          create: () => {
+            const group = new THREE.Group();
+
+            // -------------------------
+            // 1) CREATE DATA CUBE CORE
+            // -------------------------
+            const cubeGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+            const cubeMaterial = new THREE.MeshPhongMaterial({
+              color: 0x66e0ff,
+              emissive: 0x0044ff,
+              emissiveIntensity: 0.7,
+              shininess: 120,
+              transparent: true,
+              opacity: 0.95
+            });
+            const coreCube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            group.add(coreCube);
+
+            // -------------------------
+            // 2) SMALL DATA BLOCKS
+            // -------------------------
+            const blocks = [];
+            const blockGeo = new THREE.BoxGeometry(0.18, 0.18, 0.18);
+            const blockMat = new THREE.MeshPhongMaterial({
+              color: 0xffffff,
+              emissive: 0x2288ff,
+              emissiveIntensity: 0.4
+            });
+
+            for (let i = 0; i < 50; i++) {
+              const b = new THREE.Mesh(blockGeo, blockMat.clone());
+
+              // Arrange blocks in a cube-shell instead of random cloud
+              b.position.set(
+                (Math.random() - 0.5) * 3,
+                (Math.random() - 0.5) * 3,
+                (Math.random() - 0.5) * 3
+              );
+
+              b.userData = {
+                offset: b.position.clone(),
+                speed: 0.6 + Math.random() * 1.2
+              };
+
+              blocks.push(b);
+              group.add(b);
+            }
+
+            // -------------------------
+            // 3) COMPRESSION PLATES
+            // -------------------------
+            const plateGeo = new THREE.BoxGeometry(2.5, 2.5, 0.1);
+            const plateMat = new THREE.MeshPhongMaterial({
+              color: 0x111111,
+              emissive: 0x003366,
+              emissiveIntensity: 0.2,
+              transparent: true,
+              opacity: 0.4
+            });
+
+            const leftPlate = new THREE.Mesh(plateGeo, plateMat);
+            leftPlate.position.x = -4;
+            group.add(leftPlate);
+
+            const rightPlate = new THREE.Mesh(plateGeo, plateMat);
+            rightPlate.position.x = 4;
+            group.add(rightPlate);
+
+            // -------------------------
+            // 4) REVEAL ANIMATION
+            // -------------------------
+            group.scale.set(0.2, 0.2, 0.2);
+            group.rotation.set(0, Math.PI, 0);
+            group.position.y -= 0.4;
+
+            gsap.to(group.scale, {
+              x: 1, y: 1, z: 1,
+              duration: 1.2,
+              ease: "back.out(1.8)"
+            });
+
+            gsap.to(group.rotation, {
+              y: 0,
+              duration: 1.4,
+              ease: "power3.out"
+            });
+
+            // Plates slide inward
+            gsap.to(leftPlate.position, {
+              x: -1.6,
+              duration: 1.2,
+              ease: "power3.out",
+              delay: 0.4
+            });
+            gsap.to(rightPlate.position, {
+              x: 1.6,
+              duration: 1.2,
+              ease: "power3.out",
+              delay: 0.4
+            });
+
+            // -------------------------
+            // 5) RETURN MODEL + ANIMATION LOOP
+            // -------------------------
+            return {
+              model: group,
+              animate: (t) => {
+                group.rotation.y += 0.002;
+
+                // Float blocks slightly (subtle)
+                blocks.forEach(b => {
+                  b.position.x = b.userData.offset.x + Math.sin(t * b.userData.speed) * 0.05;
+                  b.position.y = b.userData.offset.y + Math.cos(t * b.userData.speed) * 0.05;
+                });
+
+                // Pulse cube
+                const pulse = 0.96 + Math.sin(t * 2) * 0.06;
+                coreCube.scale.set(pulse, pulse, pulse);
+                cubeMaterial.emissiveIntensity = 0.7 + Math.sin(t * 2) * 0.3;
+              }
+            };
+          }
+        },
+      bandwidth: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Create a wave form
+          const points = [];
+          const geometry = new THREE.BufferGeometry();
+          
+          for (let i = 0; i < 20; i++) {
+            points.push(new THREE.Vector3(
+              (i - 10) * 0.5,
+              Math.sin(i * 0.5) * 0.5,
+              0
+            ));
+          }
+          
+          geometry.setFromPoints(points);
+          
+          const material = new THREE.LineBasicMaterial({
+            color: 0x66e0ff,
+            linewidth: 3
+          });
+          
+          const line = new THREE.Line(geometry, material);
+          group.add(line);
+          
+          // Add moving particles
+          const particles = [];
+          const particleCount = 10;
+          
+          for (let i = 0; i < particleCount; i++) {
+            const particle = new THREE.Mesh(
+              new THREE.SphereGeometry(0.1, 8, 8),
+              new THREE.MeshBasicMaterial({ color: 0x66e0ff })
+            );
+            
+            particle.position.set(
+              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 2,
+              0
+            );
+            
+            particle.userData = {
+              speed: 0.5 + Math.random() * 0.5,
+              offset: Math.random() * Math.PI * 2
+            };
+            
+            group.add(particle);
+            particles.push(particle);
+          }
+          
+          return {
+            model: group,
+            animate: (time) => {
+              // Animate wave
+              const positions = line.geometry.attributes.position;
+              for (let i = 0; i < positions.count; i++) {
+                positions.setY(
+                  i,
+                  Math.sin(i * 0.5 + time * 2) * 0.5
+                );
+              }
+              positions.needsUpdate = true;
+              
+              // Animate particles
+              particles.forEach((particle, i) => {
+                particle.position.x += particle.userData.speed * 0.05;
+                particle.position.y = Math.sin(time * 2 + i) * 0.5;
+                
+                if (particle.position.x > 5) {
+                  particle.position.x = -5;
+                }
+              });
+              
+              group.rotation.y = time * 0.1;
+            }
+          };
+        }
+      },
+      latency: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Create a speed gauge
+          const createGauge = (radius, color) => {
+            const segments = 32;
+            const material = new THREE.MeshBasicMaterial({
+              color,
+              side: THREE.DoubleSide,
+              transparent: true,
+              opacity: 0.8
+            });
+            
+            const geometry = new THREE.RingGeometry(
+              radius - 0.2,
+              radius,
+              segments,
+              1,
+              0,
+              Math.PI
+            );
+            
+            const arc = new THREE.Mesh(geometry, material);
+            arc.rotation.x = Math.PI / 2;
+            arc.rotation.z = Math.PI;
+            
+            return arc;
+          };
+          
+          // Add gauge rings
+          const outerGauge = createGauge(2, 0x66e0ff);
+          const middleGauge = createGauge(1.6, 0x66aaff);
+          const innerGauge = createGauge(1.2, 0x6666ff);
+          
+          group.add(outerGauge, middleGauge, innerGauge);
+          
+          // Add needle
+          const needle = new THREE.Mesh(
+            new THREE.BoxGeometry(0.1, 1.5, 0.1),
+            new THREE.MeshBasicMaterial({ color: 0xff5555 })
+          );
+          needle.position.y = 0.75;
+          group.add(needle);
+          
+          return {
+            model: group,
+            animate: (time) => {
+              // Make needles move to show low latency
+              needle.rotation.z = Math.sin(time * 2) * 0.1 - Math.PI/2;
+              
+              // Pulsing effect on gauges
+              const pulse = Math.sin(time * 2) * 0.1 + 0.9;
+              outerGauge.scale.set(pulse, pulse, 1);
+              middleGauge.scale.set(pulse * 0.9, pulse * 0.9, 1);
+              innerGauge.scale.set(pulse * 0.8, pulse * 0.8, 1);
+              
+              group.rotation.y = time * 0.2;
+            }
+          };
+        }
+      },
+      collaboration: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Create multiple user avatars
+          const colors = [0x66aaff, 0xff66aa, 0x66ffaa, 0xffcc66];
+          const users = [];
+          
+          colors.forEach((color, i) => {
+            const angle = (i / colors.length) * Math.PI * 2;
+            const radius = 1.5;
+            
+            // User icon
+            const geometry = new THREE.CircleGeometry(0.5, 32);
+            const material = new THREE.MeshBasicMaterial({
+              color,
+              side: THREE.DoubleSide
+            });
+            
+            const user = new THREE.Mesh(geometry, material);
+            user.position.set(
+              Math.cos(angle) * radius,
+              Math.sin(angle) * radius,
+              0
+            );
+            
+            // Connection line to center
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+              new THREE.Vector3(0, 0, 0),
+              new THREE.Vector3(
+                Math.cos(angle) * radius,
+                Math.sin(angle) * radius,
+                0
+              )
+            ]);
+            
+            const lineMaterial = new THREE.LineBasicMaterial({
+              color: 0xffffff,
+              transparent: true,
+              opacity: 0.3
+            });
+            
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            
+            group.add(user, line);
+            users.push({
+              mesh: user,
+              line,
+              angle,
+              radius,
+              speed: 0.5 + Math.random()
+            });
+          });
+          
+          return {
+            model: group,
+            users,
+            animate: (time) => {
+              // Animate users moving around
+              users.forEach((user, i) => {
+                const angle = user.angle + time * user.speed * 0.1;
+                const radius = user.radius + Math.sin(time * user.speed) * 0.2;
+                
+                user.mesh.position.set(
+                  Math.cos(angle) * radius,
+                  Math.sin(angle) * radius,
+                  0
+                );
+                
+                // Update connection line
+                const positions = user.line.geometry.attributes.position;
+                positions.setXYZ(1, 
+                  Math.cos(angle) * radius,
+                  Math.sin(angle) * radius,
+                  0
+                );
+                positions.needsUpdate = true;
+                
+                // Pulsing effect
+                user.mesh.scale.setScalar(1 + Math.sin(time * user.speed * 2) * 0.1);
+              });
+              
+              group.rotation.y = time * 0.05;
+            }
+          };
+        }
+      },
+      tools: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Create floating tools
+          const tools = [
+            { type: 'file', color: 0x66aaff, size: 0.5, pos: [0, 0, 0] },
+            { type: 'edit', color: 0xffaa66, size: 0.4, pos: [1, 0.5, 0] },
+            { type: 'share', color: 0x66ffaa, size: 0.4, pos: [-1, -0.5, 0] },
+            { type: 'convert', color: 0xff66aa, size: 0.4, pos: [0.7, -0.7, 0] },
+            { type: 'compress', color: 0xaa66ff, size: 0.4, pos: [-0.7, 0.7, 0] }
+          ];
+          
+          tools.forEach((tool, i) => {
+            let geometry;
+            
+            switch(tool.type) {
+              case 'file':
+                geometry = new THREE.BoxGeometry(0.8, 1, 0.1);
+                break;
+              case 'edit':
+                geometry = new THREE.ConeGeometry(0.3, 0.6, 4);
+                break;
+              case 'share':
+                geometry = new THREE.TorusGeometry(0.3, 0.1, 8, 16);
+                break;
+              case 'convert':
+                geometry = new THREE.OctahedronGeometry(0.3, 0);
+                break;
+              case 'compress':
+                geometry = new THREE.DodecahedronGeometry(0.3, 0);
+                break;
+            }
+            
+            const material = new THREE.MeshPhongMaterial({
+              color: tool.color,
+              shininess: 100,
+              transparent: true,
+              opacity: 0.9
+            });
+            
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(tool.pos[0], tool.pos[1], tool.pos[2]);
+            mesh.userData = {
+              speed: 0.5 + Math.random(),
+              offset: Math.random() * Math.PI * 2
+            };
+            
+            group.add(mesh);
+          });
+          
+          return {
+            model: group,
+            animate: (time) => {
+              group.children.forEach((child, i) => {
+                // Floating animation
+                child.position.y += Math.sin(time * child.userData.speed + i) * 0.005;
+                
+                // Rotation
+                child.rotation.x = time * 0.2 * child.userData.speed;
+                child.rotation.y = time * 0.3 * child.userData.speed;
+                
+                // Pulsing scale
+                const scale = 1 + Math.sin(time * child.userData.speed + i) * 0.1;
+                child.scale.set(scale, scale, scale);
+              });
+              
+              group.rotation.y = time * 0.1;
+            }
+          };
+        }
+      },
+      encryption: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Create a sphere for the core
+          const geometry = new THREE.SphereGeometry(1, 32, 32);
+          const material = new THREE.MeshPhongMaterial({
+            color: 0x66aaff,
+            transparent: true,
+            opacity: 0.3,
+            wireframe: true
+          });
+          
+          const sphere = new THREE.Mesh(geometry, material);
+          group.add(sphere);
+          
+          // Add encryption layers
+          const layers = [];
+          const layerCount = 3;
+          
+          for (let i = 0; i < layerCount; i++) {
+            const layerGeometry = new THREE.IcosahedronGeometry(1.5 + i * 0.5, 1);
+            const layerMaterial = new THREE.MeshBasicMaterial({
+              color: 0x66aaff,
+              wireframe: true,
+              transparent: true,
+              opacity: 0.3
+            });
+            
+            const layer = new THREE.Mesh(layerGeometry, layerMaterial);
+            layer.userData = {
+              speed: 0.2 + i * 0.1,
+              direction: Math.random() > 0.5 ? 1 : -1
+            };
+            
+            group.add(layer);
+            layers.push(layer);
+          }
+          
+          // Add floating lock icon
+          const lockGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2);
+          const lockMaterial = new THREE.MeshPhongMaterial({
+            color: 0x66e0ff,
+            shininess: 100
+          });
+          
+          const lock = new THREE.Mesh(lockGeometry, lockMaterial);
+          lock.position.y = 1.5;
+          group.add(lock);
+          
+          return {
+            model: group,
+            layers,
+            lock,
+            animate: (time) => {
+              // Animate layers
+              layers.forEach((layer, i) => {
+                layer.rotation.x = time * 0.1 * layer.userData.speed * layer.userData.direction;
+                layer.rotation.y = time * 0.15 * layer.userData.speed * (i % 2 === 0 ? 1 : -1);
+              });
+              
+              // Animate lock
+              lock.position.y = 1.5 + Math.sin(time) * 0.1;
+              lock.rotation.y = time * 0.5;
+              
+              // Pulsing sphere
+              const pulse = 1 + Math.sin(time * 2) * 0.05;
+              sphere.scale.set(pulse, pulse, pulse);
+              
+              group.rotation.y = time * 0.05;
+            }
+          };
+        }
+      },
+      cloud: {
+        create: () => {
+          const geometry = new THREE.IcosahedronGeometry(2, 3);
+          const material = new THREE.MeshPhongMaterial({
+            color: 0x66aaff,
+            transparent: true,
+            opacity: 0.8,
+            shininess: 100,
+            emissive: 0x112244,
+            specular: 0xffffff
+          });
+          const cloud = new THREE.Mesh(geometry, material);
+          cloud.scale.set(0.1, 0.1, 0.1);
+          return { model: cloud, animate: (time) => {
+            cloud.rotation.y = time * 0.2;
+            cloud.scale.setScalar(0.1 + Math.sin(time * 2) * 0.01);
+          }};
+        }
+      },
+      network: {
+        create: () => {
+          const group = new THREE.Group();
+          const nodes = [];
+          const lines = [];
+          
+          // Create nodes
+          for (let i = 0; i < 5; i++) {
+            const geometry = new THREE.SphereGeometry(0.2, 16, 16);
+            const material = new THREE.MeshBasicMaterial({ color: 0x66e0ff });
+            const sphere = new THREE.Mesh(geometry, material);
+            
+            // Position in a sphere
+            const radius = 1.5;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            sphere.position.set(
+              radius * Math.sin(phi) * Math.cos(theta),
+              radius * Math.sin(phi) * Math.sin(theta),
+              radius * Math.cos(phi)
+            );
+            
+            nodes.push({
+              mesh: sphere,
+              speed: 0.1 + Math.random() * 0.2,
+              startPos: sphere.position.clone()
+            });
+            group.add(sphere);
+          }
+          
+          // Create connections
+          for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+              const geometry = new THREE.BufferGeometry().setFromPoints([
+                nodes[i].mesh.position.clone(),
+                nodes[j].mesh.position.clone()
+              ]);
+              const material = new THREE.LineBasicMaterial({
+                color: 0x66e0ff,
+                transparent: true,
+                opacity: 0.5
+              });
+              const line = new THREE.Line(geometry, material);
+              lines.push({ line, node1: i, node2: j });
+              group.add(line);
+            }
+          }
+          
+          return {
+            model: group,
+            nodes: nodes,
+            lines: lines,
+            animate: (time) => {
+              // Animate nodes
+              nodes.forEach((node, i) => {
+                node.mesh.position.x = node.startPos.x + Math.sin(time * node.speed) * 0.3;
+                node.mesh.position.y = node.startPos.y + Math.cos(time * node.speed * 0.7) * 0.3;
+                node.mesh.position.z = node.startPos.z + Math.sin(time * node.speed * 0.5) * 0.3;
+              });
+              
+              // Update lines
+              lines.forEach(lineData => {
+                const positions = lineData.line.geometry.attributes.position;
+                positions.setXYZ(0, 
+                  nodes[lineData.node1].mesh.position.x,
+                  nodes[lineData.node1].mesh.position.y,
+                  nodes[lineData.node1].mesh.position.z
+                );
+                positions.setXYZ(1,
+                  nodes[lineData.node2].mesh.position.x,
+                  nodes[lineData.node2].mesh.position.y,
+                  nodes[lineData.node2].mesh.position.z
+                );
+                positions.needsUpdate = true;
+              });
+              
+              group.rotation.y = time * 0.1;
+            }
+          };
+        }
+      },
+      storage: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Create storage cubes
+          const geometry = new THREE.BoxGeometry(1, 1, 1);
+          const material = new THREE.MeshPhongMaterial({
+            color: 0xaa66ff,
+            transparent: true,
+            opacity: 0.8,
+            shininess: 100,
+            emissive: 0x221144,
+            specular: 0xffffff
+          });
+          
+          const cubes = [];
+          const count = 8;
+          const radius = 1.5;
+          
+          for (let i = 0; i < count; i++) {
+            const cube = new THREE.Mesh(geometry, material.clone());
+            const angle = (i / count) * Math.PI * 2;
+            cube.position.x = Math.cos(angle) * radius;
+            cube.position.z = Math.sin(angle) * radius;
+            cube.scale.set(0.5, 0.1 + Math.random() * 0.5, 0.5);
+            cube.userData = { angle: angle, speed: 0.1 + Math.random() * 0.2 };
+            group.add(cube);
+            cubes.push(cube);
+          }
+          
+          return {
+            model: group,
+            cubes: cubes,
+            animate: (time) => {
+              cubes.forEach((cube, i) => {
+                const angle = cube.userData.angle + time * cube.userData.speed * 0.5;
+                cube.position.x = Math.cos(angle) * radius;
+                cube.position.z = Math.sin(angle) * radius;
+                cube.rotation.y = time * 0.5;
+                
+                // Pulsing effect
+                const scale = 0.8 + Math.sin(time * 2 + i) * 0.2;
+                cube.scale.set(scale, cube.scale.y, scale);
+              });
+              group.rotation.y = time * 0.1;
+            }
+          };
+        }
+      },
+      globe: {
+        create: () => {
+          const group = new THREE.Group();
+          
+          // Create globe
+          const geometry = new THREE.SphereGeometry(1.5, 32, 32);
+          const material = new THREE.MeshPhongMaterial({
+            color: 0x66aaff,
+            transparent: true,
+            opacity: 0.3,
+            wireframe: true
+          });
+          const sphere = new THREE.Mesh(geometry, material);
+          group.add(sphere);
+          
+          // Add points for network nodes
+          const points = [];
+          const pointCount = 20;
+          for (let i = 0; i < pointCount; i++) {
+            const phi = Math.acos(-1 + (2 * i) / pointCount);
+            const theta = Math.sqrt(pointCount * Math.PI) * phi;
+            
+            const point = new THREE.Mesh(
+              new THREE.SphereGeometry(0.05, 8, 8),
+              new THREE.MeshBasicMaterial({ color: 0x66e0ff })
+            );
+            
+            point.position.setFromSphericalCoords(1.6, phi, theta);
+            point.userData.speed = 0.1 + Math.random() * 0.2;
+            group.add(point);
+            points.push(point);
+          }
+          
+          // Add connection lines
+          const lines = [];
+          for (let i = 0; i < points.length; i++) {
+            for (let j = i + 1; j < points.length; j++) {
+              if (Math.random() > 0.7) { // Only connect some points
+                const geometry = new THREE.BufferGeometry().setFromPoints([
+                  points[i].position.clone(),
+                  points[j].position.clone()
+                ]);
+                const material = new THREE.LineBasicMaterial({
+                  color: 0x66e0ff,
+                  transparent: true,
+                  opacity: 0.3
+                });
+                const line = new THREE.Line(geometry, material);
+                group.add(line);
+                lines.push({
+                  line: line,
+                  point1: points[i],
+                  point2: points[j]
+                });
+              }
+            }
+          }
+          
+          return {
+            model: group,
+            points: points,
+            lines: lines,
+            animate: (time) => {
+              // Animate points
+              points.forEach((point, i) => {
+                const phi = Math.acos(-1 + (2 * i) / pointCount);
+                const theta = time * point.userData.speed * 0.5 + Math.sqrt(pointCount * Math.PI) * phi;
+                
+                point.position.setFromSphericalCoords(
+                  1.6 + Math.sin(time * 0.5 + i) * 0.1,
+                  phi + Math.sin(time * 0.3 + i) * 0.1,
+                  theta
+                );
+                
+                // Pulsing effect
+                const scale = 0.8 + Math.sin(time * 2 + i) * 0.2;
+                point.scale.set(scale, scale, scale);
+              });
+              
+              // Update lines
+              lines.forEach(lineData => {
+                const positions = lineData.line.geometry.attributes.position;
+                positions.setXYZ(0, 
+                  lineData.point1.position.x,
+                  lineData.point1.position.y,
+                  lineData.point1.position.z
+                );
+                positions.setXYZ(1,
+                  lineData.point2.position.x,
+                  lineData.point2.position.y,
+                  lineData.point2.position.z
+                );
+                positions.needsUpdate = true;
+              });
+              
+              group.rotation.y = time * 0.05;
+              sphere.rotation.y = time * 0.02;
+            }
+          };
+        }
+      }
+    };
+
+    const landmarks = [
+        {
+          position: { x: 0, y: 0, z: 18 },
+          lookAt: { x: 0, y: 0, z: 0 },
+          title: "BEST Compression",
+          description: "ALL Your files shrink by 95% with no quality loss. See how data transforms into a compact, efficient structure.",
+          model: 'compression',
+          animation: 'float',
+          scale: 2.8,
+          rotation: { x: 0, y: 0, z: 0 },
+          positionOffset: { x: 0, y: 1, z: 0 }
+        },
+      { 
+        position: { x: 12, y: 3, z: 12 }, 
+        lookAt: { x: 0, y: 0, z: 0 },
+        title: "Decentralized P2P Cloud",
+        description: "Your data stays local and fast. Our peer-to-peer architecture means no central servers, just direct device-to-device connections.",
+        model: 'network',
+        animation: 'float',
+        scale: 1.8,
+        rotation: { x: 0.2, y: 0, z: 0 },
+        positionOffset: { x: 0, y: 1, z: 0 }
+      },
+      { 
+        position: { x: -12, y: 4, z: -5 }, 
+        lookAt: { x: 0, y: 0, z: 0 },
+        title: "Intelligent Bandwidth Optimization",
+        description: "Dramatically reduced data usage without compromising quality. Stream HD video on 3G networks with our smart optimization.",
+        model: 'bandwidth',
+        animation: 'pulse',
+        scale: 2,
+        rotation: { x: -0.2, y: 0.5, z: 0 },
+        positionOffset: { x: 0, y: 1, z: 0 }
+      },
+      { 
+        position: { x: 0, y: 8, z: -15 }, 
+        lookAt: { x: 0, y: 0, z: 0 },
+        title: "5ms Ultra-Low Latency",
+        description: "Experience real-time communication like never before. Video calls, messaging, and file transfers with near-zero delay.",
+        model: 'latency',
+        animation: 'rotate',
+        scale: 1.8,
+        rotation: { x: 0.3, y: 0, z: 0 },
+        positionOffset: { x: 0, y: 1, z: 0 }
+      },
+      { 
+        position: { x: -10, y: 6, z: 10 }, 
+        lookAt: { x: 0, y: 0, z: 0 },
+        title: "Real-time Collaboration",
+        description: "Work together seamlessly with our ultra-low latency collaboration tools. Multiple users can edit documents simultaneously with no lag.",
+        model: 'collaboration',
+        animation: 'float',
+        scale: 2,
+        rotation: { x: 0, y: 0.5, z: 0 },
+        positionOffset: { x: 0, y: 1, z: 0 }
+      },
+      { 
+        position: { x: 15, y: 5, z: -5 }, 
+        lookAt: { x: 0, y: 0, z: 0 },
+        title: "All-in-One File Management",
+        description: "Edit, convert, compress, and share files directly in the cloud. No need for additional software - everything is built in.",
+        model: 'tools',
+        animation: 'rotate',
+        scale: 2.2,
+        rotation: { x: 0, y: -0.5, z: 0 },
+        positionOffset: { x: 0, y: 1, z: 0 }
+      },
+      { 
+        position: { x: 0, y: 12, z: 0 }, 
+        lookAt: { x: 0, y: 0, z: 0 },
+        title: "Military-Grade Encryption",
+        description: "End-to-end encryption ensures your data is protected at all times. Not even we can access your files - only you hold the keys.",
+        model: 'encryption',
+        animation: 'pulse',
+        scale: 2.5,
+        rotation: { x: 0.4, y: 0, z: 0 },
+        positionOffset: { x: 0, y: 1, z: 0 }
+      }
+    ];
+
+    function init() {
+      // Create scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0920);
+      scene.fog = new THREE.FogExp2(0x0a0920, 0.02); // Lighter fog for better visibility
+      
+      // Preload first landmark model if not already loaded
+      // if (landmarks.length > 0) {
+      //   const firstLandmark = landmarks[0];
+      //   if (!preloadedModel && models[firstLandmark.model]) {
+      //     preloadedModel = models[firstLandmark.model].create();
+      //   }
+      //   prepareFirstLandmarkModel();
+      // }
+      
+      // Camera setup
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 20);
+      
+      // Renderer setup with better antialiasing
+      renderer = new THREE.WebGLRenderer({ 
+        antialias: true, 
+        alpha: true,
+        powerPreference: 'high-performance',
+        precision: 'mediump'
+      });
+      
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      
+      document.getElementById('scene-container').appendChild(renderer.domElement);
+
+      // Enhanced lighting
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+      scene.add(ambientLight);
+
+      // Main directional light
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(1, 1, 1);
+      directionalLight.castShadow = true;
+      directionalLight.shadow.mapSize.width = 1024;
+      directionalLight.shadow.mapSize.height = 1024;
+      scene.add(directionalLight);
+      
+      // Add some point lights for better 3D effect
+      const pointLight1 = new THREE.PointLight(0x66aaff, 1, 50);
+      pointLight1.position.set(10, 10, 10);
+      scene.add(pointLight1);
+      
+      const pointLight2 = new THREE.PointLight(0xff66aa, 1, 50);
+      pointLight2.position.set(-10, -10, -10);
+      scene.add(pointLight2);
+
+      // Create cloud particles
+      createCloudParticles();
+
+      // Create data streams
+      createDataStreams();
+
+      // Handle window resize
+      window.addEventListener('resize', onWindowResize, false);
+      
+      // Add orbit controls for debugging (can be removed in production)
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.screenSpacePanning = false;
+      controls.enabled = false; // Disable by default
+
+      // Start animation loop
+      animate();
+
+      sceneReady = true;
+      attemptJourneyLaunch();
+    }
+    
+    function createCloudParticles() {
+      const particles = 5000; // Reduced for better performance
+      const geometry = new THREE.BufferGeometry();
+      const positions = [];
+      const colors = [];
+      const color = new THREE.Color();
+      
+      for (let i = 0; i < particles; i++) {
+        // Create a sphere of particles
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const radius = 10 + Math.random() * 10;
+        
+        positions.push(
+          radius * Math.sin(phi) * Math.cos(theta),
+          radius * Math.sin(phi) * Math.sin(theta),
+          radius * Math.cos(phi)
+        );
+        
+        // Random blue/purple colors
+        color.setHSL(
+          0.6 + Math.random() * 0.2,
+          0.5,
+          0.5 + Math.random() * 0.3
+        );
+        colors.push(color.r, color.g, color.b);
+      }
+      
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      
+      const material = new THREE.PointsMaterial({
+        size: 0.2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+      });
+      
+      const particleSystem = new THREE.Points(geometry, material);
+      scene.add(particleSystem);
+      objects.push(particleSystem);
+    }
+    
+    function createDataStreams() {
+      // Create flowing data streams
+      for (let i = 0; i < 3; i++) {
+        const curve = new THREE.CubicBezierCurve3(
+          new THREE.Vector3(
+            Math.random() * 20 - 10,
+            Math.random() * 10 - 5,
+            Math.random() * 10 - 5
+          ),
+          new THREE.Vector3(
+            Math.random() * 20 - 10,
+            Math.random() * 10 - 5,
+            Math.random() * 10 - 5
+          ),
+          new THREE.Vector3(
+            Math.random() * 20 - 10,
+            Math.random() * 10 - 5,
+            Math.random() * 10 - 5
+          ),
+          new THREE.Vector3(
+            Math.random() * 20 - 10,
+            Math.random() * 10 - 5,
+            Math.random() * 10 - 5
+          )
+        );
+        
+        const points = curve.getPoints(50);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        
+        const material = new THREE.LineBasicMaterial({
+          color: 0x66e0ff,
+          transparent: true,
+          opacity: 0.2
+        });
+        
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+        objects.push(line);
+      }
+    }
+
+    function prepareFirstLandmarkModel() {
+      if (!preloadedModel || firstModelPrepared || !scene) return;
+      const firstLandmark = landmarks[0];
+      const model = preloadedModel.model;
+      
+      model.position.set(
+        firstLandmark.positionOffset?.x || 0,
+        firstLandmark.positionOffset?.y || 0,
+        firstLandmark.positionOffset?.z || 0
+      );
+      
+      model.rotation.set(
+        firstLandmark.rotation?.x || 0,
+        firstLandmark.rotation?.y || 0,
+        firstLandmark.rotation?.z || 0
+      );
+      
+      const initialScale = firstLandmark.scale || 1;
+      model.scale.set(initialScale, initialScale, initialScale);
+      model.visible = false;
+      scene.add(model);
+      currentModel = preloadedModel;
+      firstModelPrepared = true;
+    }
+
+    function attemptJourneyLaunch() {
+      if (sceneReady && quoteIntroReady && !introLaunched) {
+        introLaunched = true;
+        playFirstLandmarkIntro();
+      }
+    }
+
+  function playFirstLandmarkIntro() {
+    const quoteOverlay = document.getElementById('quote-overlay');
+    prepareFirstLandmarkModel();
+
+    // Kill any previous animations
+    gsap.killTweensOf(camera.position);
+    gsap.killTweensOf(camera.rotation);
+    gsap.killTweensOf("*");
+
+    // Fade out quote overlay
+    if (quoteOverlay) {
+        quoteOverlay.style.willChange = 'opacity, transform';
+        quoteOverlay.style.pointerEvents = 'none';
+        quoteOverlay.style.backfaceVisibility = 'hidden';
+        
+        gsap.to(quoteOverlay, {
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.inOut",
+            onComplete: () => {
+                quoteOverlay.style.display = "none";
+                startJourney();
+            }
+        });
+    } else {
+        startJourney();
+    }
+
+    // --- FIRST LANDMARK MODEL APPEARANCE ---
+    if (preloadedModel && firstModelPrepared && !firstModelVisible) {
+
+        const model = preloadedModel.model;
+        const landmark = landmarks[0];
+
+        // Base transform
+        model.position.set(
+            landmark.positionOffset?.x || 0,
+            landmark.positionOffset?.y || 0,
+            landmark.positionOffset?.z || 0
+        );
+
+        model.rotation.set(0, Math.PI, 0); // flipped start
+        model.scale.set(0.2, 0.2, 0.2);     // tiny start
+        model.visible = true;
+        firstModelVisible = true;
+
+        if (model.parent !== scene) scene.add(model);
+
+        // --- Fade-in: gather all mesh materials ---
+        const fadeMaterials = [];
+        model.traverse(child => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = 0;   // start invisible
+                fadeMaterials.push(child.material);
+            }
+        });
+
+        // --- CINEMATIC INTRO TIMELINE ---
+        const targetScale = landmark.scale || 1;
+
+        const tl = gsap.timeline();
+
+        tl.to(fadeMaterials, {
+            opacity: 1,
+            duration: 0.8,
+            ease: "power2.out"
+        })
+        .to(model.rotation, {
+            y: 0,
+            x: -0.4,
+            duration: 1.2,
+            ease: "power3.out"
+        }, "<")
+        .to(model.scale, {
+            x: targetScale,
+            y: targetScale,
+            z: targetScale,
+            duration: 1.3,
+            ease: "back.out(1.8)"
+        }, "<0.1")
+        .to(model.rotation, {
+            x: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        }, "-=0.4");
+    }
+
+    // Overlay performance optimization
+    if (quoteOverlay) {
+        quoteOverlay.style.willChange = 'opacity, transform';
+        quoteOverlay.style.pointerEvents = 'none';
+        quoteOverlay.style.backfaceVisibility = 'hidden';
+    }
+}
+
+    function startJourney() {
+          moveToNextLandmark();
+      }
+
+    
+    function loadModelForLandmark(landmark, options = {}) {
+      if (!models[landmark.model]) return;
+      
+      const reuseExisting = options.reuseExisting && currentModel && currentModel.model;
+      let model = reuseExisting ? currentModel.model : null;
+      
+      if (!reuseExisting) {
+        if (currentModel && currentModel.model) {
+          scene.remove(currentModel.model);
+        }
+        
+        currentModel = models[landmark.model].create();
+        model = currentModel.model;
+      } else {
+        gsap.killTweensOf(model.scale);
+        gsap.killTweensOf(model.position);
+      }
+      
+      // Apply position, rotation, and scale
+      model.position.set(
+        landmark.positionOffset?.x || 0,
+        landmark.positionOffset?.y || 0,
+        landmark.positionOffset?.z || 0
+      );
+      
+      model.rotation.set(
+        landmark.rotation?.x || 0,
+        landmark.rotation?.y || 0,
+        landmark.rotation?.z || 0
+      );
+      
+      const targetScale = landmark.scale || 1;
+      
+      if (!reuseExisting) {
+        model.scale.set(0.01, 0.01, 0.01);
+        scene.add(model);
+        
+        gsap.to(model.scale, {
+          x: targetScale,
+          y: targetScale,
+          z: targetScale,
+          duration: 1.1,
+          ease: 'back.out(1.4)'
+        });
+      } else {
+        model.scale.set(targetScale, targetScale, targetScale);
+      }
+    if (landmark.animation === 'float') {
+        gsap.to(model.position, {
+            y: (landmark.positionOffset?.y || 0) + 0.2,
+            duration: 3,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1
+        });
+    }
+
+    }
+    
+    function moveToNextLandmark() {
+      if (currentLandmark >= landmarks.length) {
+        currentLandmark = 0; // Loop back to start
+      }
+
+      const landmark = landmarks[currentLandmark];
+      const infoElement = document.getElementById('landmark-info');
+      const titleElement = document.getElementById('landmark-title');
+      const descElement = document.getElementById('landmark-desc');
+      let infoRevealed = false;
+
+      const revealInfo = () => {
+        if (infoRevealed) return;
+        infoRevealed = true;
+        
+        // Ensure the model maintains its scale during the transition
+        if (currentModel && currentModel.model) {
+          const model = currentModel.model;
+          const targetScale = landmarks[currentLandmark]?.scale || 1;
+          
+          // Force set the scale and update the matrix
+          model.scale.set(targetScale, targetScale, targetScale);
+          model.updateMatrix();
+          
+          // Add a small scale animation to ensure stability
+          gsap.to(model.scale, {
+            x: targetScale * 1.02,
+            y: targetScale * 1.02,
+            z: targetScale * 1.02,
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1,
+            ease: 'sine.inOut',
+            onUpdate: () => model.updateMatrix()
+          });
+        }
+
+        // Animate the info elements
+        gsap.to(infoElement, {
+          rotationY: 0,
+          opacity: 1,
+          duration: 0.55,
+          ease: 'back.out(1.4)',
+          onStart: () => {
+            gsap.to(titleElement, {
+              rotationY: 0,
+              opacity: 1,
+              duration: 0.4,
+              ease: 'back.out(2)'
+            });
+            
+            gsap.to(descElement, {
+              rotationY: 0,
+              opacity: 1,
+              duration: 0.5,
+              delay: 0.1,
+              ease: 'back.out(1.7)'
+            });
+          }
+        });
+      };
+
+      // Update landmark info with 3D rotation animation
+      gsap.set([titleElement, descElement], { 
+        rotationY: 90,
+        opacity: 0,
+        transformOrigin: '50% 50% -50px',
+        perspective: 1000
+      });
+      
+      // Use preloaded model if it's the first landmark
+      if (isFirstLandmark && preloadedModel) {
+        currentModel = preloadedModel;
+        const model = currentModel.model;
+        
+        if (!firstModelPrepared) {
+          // Set initial position
+          model.position.set(
+            landmarks[0].positionOffset?.x || 0,
+            landmarks[0].positionOffset?.y || 0,
+            landmarks[0].positionOffset?.z || 0
+          );
+          
+          // Set initial rotation
+          model.rotation.set(
+            landmarks[0].rotation?.x || 0,
+            landmarks[0].rotation?.y || 0,
+            landmarks[0].rotation?.z || 0
+          );
+          
+          // Set and lock the scale
+          const targetScale = landmarks[0].scale || 1;
+          model.scale.set(targetScale, targetScale, targetScale);
+          
+          // Prevent any scaling animations
+          model.matrixAutoUpdate = false;
+          model.updateMatrix();
+          
+          scene.add(model);
+          firstModelPrepared = true;
+        } else {
+          // Ensure scale remains consistent
+          const targetScale = landmarks[0].scale || 1;
+          model.scale.set(targetScale, targetScale, targetScale);
+          model.updateMatrix();
+        }
+        
+        model.visible = true;
+        firstModelVisible = true;
+        
+        // Add a small delay before revealing info to ensure model is stable
+        setTimeout(revealInfo, 100);
+        isFirstLandmark = false;
+      }
+      
+      // Animate camera to new position (custom easing for first transition)
+      const isFirstTransition = currentLandmark === 0 && !firstTransitionDone;
+      const cameraDuration = isFirstTransition ? 1.6 : 1.8;
+      const cameraEase = isFirstTransition ? 'power3.inOut' : 'power2.inOut';
+      const reusePreloadedModel = isFirstTransition && currentModel === preloadedModel;
+      
+      // Store the original FOV to ensure we return to it
+      const originalFov = camera.fov;
+      
+      gsap.to(camera.position, {
+        x: landmark.position.x,
+        y: landmark.position.y,
+        z: landmark.position.z,
+        duration: cameraDuration,
+        ease: cameraEase,
+        onStart: () => {
+          if (isFirstTransition) {
+            // Make the FOV change much more subtle
+            const introFov = Math.min(72, camera.fov + 2); // Reduced from +6 to +2
+            gsap.fromTo(camera, 
+              { fov: introFov },
+              { 
+                fov: originalFov, // Use the stored original FOV
+                duration: cameraDuration * 1.2, // Slightly longer for smoother transition
+                ease: 'sine.inOut',
+                onUpdate: () => camera.updateProjectionMatrix()
+              }
+            );
+          }
+          // Fade out current model if it exists
+          if (currentModel && currentModel.model && !reusePreloadedModel) {
+            gsap.to(currentModel.model.scale, {
+              x: 0.01,
+              y: 0.01,
+              z: 0.01,
+              duration: 1,
+              onComplete: () => {
+                if (currentModel && currentModel.model) {
+                  scene.remove(currentModel.model);
+                }
+              }
+            });
+          }
+          
+          // Hide info with 3D flip
+          gsap.to(infoElement, {
+            rotationY: -90,
+            opacity: 0,
+            duration: 0.35,
+            ease: 'back.in',
+            onComplete: () => {
+              // Update content while hidden
+              titleElement.textContent = landmark.title;
+              descElement.textContent = landmark.description;
+              if (isFirstTransition) {
+                revealInfo();
+              }
+            }
+          });
+        },
+        onUpdate: () => {
+          camera.lookAt(
+            landmark.lookAt.x,
+            landmark.lookAt.y,
+            landmark.lookAt.z
+          );
+        },
+        onComplete: () => {
+          if (isFirstTransition) {
+            firstTransitionDone = true;
+          }
+          // Load and animate the 3D model for this landmark
+          loadModelForLandmark(landmark, { reuseExisting: reusePreloadedModel });
+          
+          // Show info with 3D flip animation (if not already shown)
+          revealInfo();
+
+          // Move to next landmark after a delay
+          setTimeout(() => {
+                currentLandmark++;
+                moveToNextLandmark();
+          }, 4000);
+        }
+      });
+    }
+    
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      const delta = clock.getDelta();
+      const time = clock.getElapsedTime();
+      
+      // Animate the current 3D model if it exists
+      if (currentModel && currentModel.animate) {
+        currentModel.animate(time);
+      }
+      
+      // Update any animations from the mixer
+      if (mixer) {
+        mixer.update(delta);
+      }
+      
+      // Rotate all base objects slightly
+      objects.forEach(obj => {
+        if (obj.rotation) {
+          obj.rotation.x += 0.0005;
+          obj.rotation.y += 0.001;
+        }
+      });
+      
+      renderer.render(scene, camera);
+    }
+    
+    // Show quote immediately when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const quoteOverlay = document.getElementById('quote-overlay');
+      const quoteCard = quoteOverlay?.querySelector('.quote-card');
+      const quoteDivider = quoteOverlay?.querySelector('.quote-divider');
+      
+      // Start preloading immediately
+      if (landmarks.length > 0 && models[landmarks[0].model]) {
+        preloadedModel = models[landmarks[0].model].create();
+      }
+      
+      if (!quoteOverlay || !quoteCard) {
+        quoteIntroReady = true;
+        attemptJourneyLaunch();
+        return;
+      }
+      
+      gsap.set(quoteCard, { opacity: 0, y: 30, scale: 0.95 });
+      if (quoteDivider) {
+        gsap.set(quoteDivider, { scaleX: 0 });
+      }
+      
+      const quoteTimeline = gsap.timeline({ delay: 0.05 });
+      quoteTimeline
+        .to(quoteCard, {
+          duration: 0.55,
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          ease: 'power3.out'
+        });
+      
+      if (quoteDivider) {
+        quoteTimeline.to(quoteDivider, {
+          duration: 0.5,
+          scaleX: 1,
+          ease: 'power2.out'
+        }, '-=0.4');
+      }
+      
+      quoteTimeline
+        .to({}, { duration: 2 })
+        .add(() => {
+          quoteFloatTween = gsap.to(quoteCard, {
+            duration: 1.2,
+            y: '+=8',
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+          quoteIntroReady = true;
+          attemptJourneyLaunch();
+        });
+    });
+
+    // Start the 3D scene after the page loads
+    window.addEventListener('load', init);
   </script>
 
+  <script>
+const canvas = document.getElementById("background-particles");
+const ctx = canvas.getContext("2d");
 
+let w, h, particles = [];
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+function createParticles() {
+  particles = [];
+  for (let i = 0; i < 160; i++) {
+    particles.push({
+      x: (Math.random() - 0.5) * w,
+      y: (Math.random() - 0.5) * h,
+      z: Math.random() * 3 + 1,          // "depth"
+      size: Math.random() * 2 + 0.5,
+      baseAngle: Math.random() * Math.PI * 2,
+      rotSpeed: 0.0005 + Math.random() * 0.001,
+      color: [
+        "#a86bff",
+        "#ff5fb7",
+        "#66e0ff"
+      ][Math.floor(Math.random()*3)]
+    });
+  }
+}
+createParticles();
+
+function glowCircle(x, y, size, color) {
+  const gradient = ctx.createRadialGradient(x, y, 0, x, y, size * 4);
+  gradient.addColorStop(0, color + "aa");
+  gradient.addColorStop(1, color + "00");
+
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(x, y, size * 4, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function animateparticles() {
+  ctx.clearRect(0,0,w,h);
+  ctx.globalCompositeOperation = "lighter";   // ✨ glow like your 3D scene
+
+  const t = performance.now();
+
+  particles.forEach(p => {
+    // Orbital motion similar to your intro
+    const angle = p.baseAngle + t * p.rotSpeed;
+    const radius = 160 * p.z;
+
+    const screenX = w/2 + Math.cos(angle) * radius;
+    const screenY = h/2 + Math.sin(angle) * radius * 0.55; 
+
+    // Z depth scales size
+    const finalSize = p.size * (2 / p.z);
+
+    glowCircle(screenX, screenY, finalSize, p.color);
+    
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(screenX, screenY, finalSize, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animateparticles);
+}
+
+animateparticles();
+</script>
+<script>
+  // Scroll Indicator + Scroll Transition
+const scrollIndicator = document.getElementById("scroll-indicator");
+const heroSection = document.querySelector(".smooth-hero");
+
+scrollIndicator.addEventListener("click", () => {
+  scrollIndicator.classList.add("hidden");
+
+  window.scrollTo({
+    top: heroSection.offsetTop,
+    behavior: "smooth"
+  });
+});
+
+// Fade indicator away once user scrolls a little
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 50) {
+    scrollIndicator.classList.add("hidden");
+  }
+});
+// Parallax blend between intro → hero
+window.addEventListener("scroll", () => {
+  const sc = window.scrollY;
+  const hero = document.querySelector(".smooth-hero");
+
+  // Move hero upward slightly for the “slide into place” effect
+  hero.style.transform = `translateY(${Math.max(0, 60 - sc * 0.15)}px)`;
+
+  // Fade in smoothly as user scrolls down
+  const opacity = Math.min(1, sc / 250);
+  hero.style.opacity = opacity;
+});
+
+</script>
+
+
+  </body>
